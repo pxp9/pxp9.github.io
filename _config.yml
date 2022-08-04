@@ -35,15 +35,3 @@ plugins:
  - jekyll-remote-theme
 
 remote_theme: "tareqdandachi/jekyll-shell-theme"
-
-# Including jekyll-shell-theme using the jekyll-remote-theme plugin
-remote_theme: tareqdandachi/jekyll-shell-theme
-
-sass:
-  style: compressed
-
-highlighter: rouge #selecting the highlighter, default is rouge
-
-header_pages:
-  - index.html
-  - about.md

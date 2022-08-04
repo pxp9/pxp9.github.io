@@ -29,8 +29,9 @@ comments:
 #  disqus_shortname: ""    # see https://disqus.com/
 #  isso_domain: ""         # see https://posativ.org/isso/
 
-theme: "jekyll-shell-theme"
+remote_theme: "tareqdandachi/jekyll-shell-theme"
 
 plugins:
  - jekyll-feed
+ - jekyll-remote-theme
 

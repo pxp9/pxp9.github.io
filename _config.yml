@@ -33,4 +33,4 @@ plugins:
  - jekyll-feed
  - jekyll-remote-theme
 
-remote_theme:  ngzhio/jekyll-theme-hamilton
+remote_theme:  zivong/jekyll-theme-hamilton

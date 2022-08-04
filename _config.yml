@@ -1,55 +1,33 @@
-title: "Er Pepe personal"
+title: "Pepe's personal"
 author: "Pepe Márquez Romero"
-email: "mailto:pepe.marquezromero@gmail.com"
-permalink: /:title/
-excerpt_separator: "\n\n\n"
-lang: "en"
-date_format: "%d/%m/%Y"
+#description: "Made with <b style=\"color: #f45;\">&lt;3</b>"
 description: "Made with <b style=\"color: #f45;\">&lt;3</b>, Pepe Márquez Romero"
-baseurl: "/home" # the subpath of your site
-url: "github.io" # the base hostname & protocol for your site
-github_username:  pxp9
+permalink: /:title/
+lang: "en"
+excerpt_separator: "\n\n\n"
+date_format: "%d/%m/%Y"
 
-# Required plugins for the theme to work properly
-plugins:
-  - jekyll-remote-theme
-  - jemoji
-
-# Including jekyll-shell-theme using the jekyll-remote-theme plugin
-remote_theme: tareqdandachi/jekyll-shell-theme
-
-sass:
-  style: compressed
-
-highlighter: rouge #selecting the highlighter, default is rouge
-
-header_pages:
-  - index.md
-  - about.md
 # Layout
 
-# show_excerpts: true        # show article excerpts on the home page
-#show_frame: true           # adds a gray frame to the site
-#show_sidebar: false        # show a sidebar instead of the usual header
-#minimal: true             # use a dark header
+show_excerpts: true        # show article excerpts on the home page
+show_frame: true           # adds a gray frame to the site
+show_sidebar: false        # show a sidebar instead of the usual header
+minimal: true             # use a dark header
 
 # Menu
 
-  #navigation:                # accepts {file, title, url, icon, sidebaricon}
-  # - {file: "index.html"}
-  #- {file: "about.md"}
+navigation:                # accepts {file, title, url, icon, sidebaricon}
+  - {file: "index.html"}
+  - {file: "about.md"}
 
-  #external:                  # shows a footer with social links - for available icons see fontawesome.com/icons
-  #- {title: Mail, icon: envelope, url: "mailto:pepe.marquezromero@gmail.com"}
-  #- {title: Github, icon: github, url: "https://github.com/pxp9/"}
-  #- {title: Subscribe, icon: rss, url: "/feed.xml"}
+external:                  # shows a footer with social links - for available icons see fontawesome.com/icons
+  - {title: Mail, icon: envelope, url: "mailto:pepe.marquezromero@gmail.com"}
+  - {title: Github, icon: github, url: "https://github.com/pxp9/"}
+  - {title: Subscribe, icon: rss, url: "/feed.xml"}
 
-  #comments:
+comments:
 #  disqus_shortname: ""    # see https://disqus.com/
 #  isso_domain: ""         # see https://posativ.org/isso/
 
-
 plugins:
- - jekyll-remote-theme
-
-remote_theme: "tareqdandachi/jekyll-shell-theme"
+ - jekyll-feed

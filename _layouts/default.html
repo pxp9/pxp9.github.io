@@ -28,13 +28,14 @@
 {% endif %}
 
 <header>
+  
+  {% assign user="pxp9" %}
+  {% avatar {{ user }} size=80 %}
+
   <a href="{{ "/" | relative_url }}" class="title">{{ site.title | escape }}</a>
   {% include menu.html menu=pages %}
   
-  {% assign user="pxp9" %}
-  {% avatar {{ user }} %}
-
-</header>
+ </header>
 
 {{ content }}
 

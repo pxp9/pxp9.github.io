@@ -1,7 +1,7 @@
 title: "The software engineer oasis"
 author: "Pepe Márquez Romero"
 #description: "Made with <b style=\"color: #f45;\">&lt;3</b>"
-description: "Made with <b style=\"color: #f45;\">&lt;3</b>, Pepe Márquez Romero"
+description: "Made with <b style=\"color: #f45;\">&lt;3</b> by Pepe Márquez Romero"
 permalink: /:title/
 lang: "en"
 excerpt_separator: "\n\n\n"

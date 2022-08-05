@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Homepage on The Software Engineer Oasis</title>
+    <link>http://pxp9.github.io/</link>
+    <description>Recent content in Homepage on The Software Engineer Oasis</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 19 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://pxp9.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>1. Theme Installation</title>
+      <link>http://pxp9.github.io/articles/installation/</link>
+      <pubDate>Sun, 19 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://pxp9.github.io/articles/installation/</guid>
+      <description>Create a new hugo website or open your existing hugo site.
+Add the theme to your hugo site Use as a git submodule:
+git submodule add https://github.com/apvarun/digital-garden-hugo-theme.git themes/digitalgarden Clone the repository (one-off, updating the theme may be harder later):
+git clone https://github.com/apvarun/digital-garden-hugo-theme.git themes/digitalgarden Setup  Copy package.json and package-lock.json files from the theme/digitalgarden folder to the root folder of your the website Run npm install to install required packages for theme Run npm i -g postcss-cli to use PostCSS with Hugo build Set theme = &#39;digitalgarden&#39; in config.</description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>http://pxp9.github.io/about/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://pxp9.github.io/about/about/</guid>
+      <description>I am Pepe Márquez Romero a computer science student based in Madrid.
+Education  Universidad Politécnica de Madrid, School of Computer Science.  Experience   I am learning Java and C in the university degree.
+  I have started developing in Rust since Summer 2020.
+  I have stated developing in Python since March 2020.
+  I have done great contributions to open-source projects.
+  Open Source projects  weather_bot.</description>
+    </item>
+    
+  </channel>
+</rss>

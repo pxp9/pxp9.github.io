@@ -1,17 +1,19 @@
 ---
-title: Fang: Async background processing for rust
-date: 2022-05-07
+title : 2. Fang, Async background processing for rust
+date : 2022-05-07
+categories: [rust]
+images:
+- https://raw.githubusercontent.com/ayrat555/ayrat555.github.io/43a8987eb81927afc3fc8c8e42cfd41e4a091462/images/2022-08-08-factory.png
 summary: Async background processing for rust with tokio and postgres
-categories: rust
-header:
-  overlay_color: "#000"
-  overlay_filter: "0.5"
-  overlay_image: /images/2022-08-08-factory.png
+published : false
 ---
+
 
 ## Introduction
 
 Even though the first stable version of Rust was released in 2015, there are still some holes in its ecosystem for solving common tasks. One of which is background processing.
+
+<!--more-->
 
 In software engineering background processing is a common approach for solving several problems:
 
@@ -52,13 +54,16 @@ Async provides significantly reduced CPU and memory overhead, especially for wor
   <footer><cite title="Async book">From the Rust's Async book</cite></footer>
 </blockquote>
 
-For some lightweight background tasks, it's cheaper to run them on the same thread using async instead of starting one thread per worker.
+For some lightweight background tasks, it's cheaper to run them on the same thread using async instead of starting one thread per worker. That's why we implemented this kind of processing in fang. Its key features:
 
-
-The threaded processing uses the [diesel](https://github.com/diesel-rs/diesel) ORM which blocks the thread
-
+- Each worker is started as a tokio task
+- If any worker fails during task execution, it's restarted
+- Tasks are saved to a Postgres database. Instead of diesel, [tokio-postgres](https://github.com/sfackler/rust-postgres) is used to interact with a db
+- The implementation is based on traits so it's easy to implement additonal backends (redis, in-memory) to store tasks. The threaded processing uses the [diesel](https://github.com/diesel-rs/diesel) ORM which blocks the thread.
 
 ## Usage
+
+### Define a job
 
 ```rust
 use fang::serde::{Deserialize, Serialize};
@@ -73,6 +78,8 @@ impl MyTask {
     }
 }
 ```
+
+### Implement the AsyncRunnable trait
 
 ```rust
 use fang::async_trait;
@@ -95,6 +102,8 @@ impl AsyncRunnable for MyTask {
 }
 ```
 
+### Init queue
+
 ```rust
 use fang::asynk::async_queue::AsyncQueue;
 let max_pool_size: u32 = 2;
@@ -104,6 +113,9 @@ let mut queue = AsyncQueue::builder()
     .duplicated_tasks(true)
     .build();
 ```
+
+
+### Start workers
 
 ```rust
 use fang::asynk::async_worker_pool::AsyncWorkerPool;
@@ -115,6 +127,8 @@ let mut pool: AsyncWorkerPool<AsyncQueue<NoTls>> = AsyncWorkerPool::builder()
 pool.start().await;
 ```
 
+### Insert tasks
+
 ```rust
 let task = MyTask::new(0);
 queue
@@ -122,3 +136,9 @@ queue
     .await
     .unwrap();
 ```
+
+## Pitfalls
+
+- async traits
+- heavy tasks
+- separate runtime or threaded processing

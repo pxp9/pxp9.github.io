@@ -6,9 +6,11 @@ enableEmoji = true
 relativeURLs = true
 googleAnalytics = "UA-PROPERTY_ID"
 
-[params]
+
+[Params]
   AuthorName = 'Pepe Márquez Romero'
   GitHubUser = 'pxp9'
+  categories = ["rust"]
   description = "I am Pepe Márquez Romero a computer science student."
   images = ['/pxp9_logo.jpg']
 

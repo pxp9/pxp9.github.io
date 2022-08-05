@@ -6,14 +6,16 @@ enableEmoji = true
 relativeURLs = true
 googleAnalytics = "UA-PROPERTY_ID"
 
-[Params]
+[params]
+  AuthorName = 'Pepe Márquez Romero'
+  GitHubUser = 'pxp9'
   description = "I am Pepe Márquez Romero a computer science student."
   images = ['/pxp9_logo.jpg']
 
-#[Params.newsletter]
- # title = ""
-  #description = "A curated weekly digest once a week to your mailbox"
-  #path = "https://www.getrevue.co/profile/username/add_subscriber"
+[Params.newsletter]
+  title = "Subscribe to my blog"
+  description = "A curated weekly digest once a week to your mailbox"
+  path = "https://www.getrevue.co/profile/username/add_subscriber"
 
 [menu]
 [[menu.main]]
@@ -44,10 +46,10 @@ googleAnalytics = "UA-PROPERTY_ID"
   name = 'GitHub'
   url = 'https://github.com/pxp9'
   weight = 2
-[[menu.social]]
-  name = 'LinkedIn'
-  url = 'https://linkedin.com'
-  weight = 4
+#[[menu.social]]
+ # name = 'LinkedIn'
+  #url = 'https://linkedin.com'
+  #weight = 4
 [[menu.social]]
   name = 'Email'
   url = 'mailto:pepe.marquezromero@gmail.com'

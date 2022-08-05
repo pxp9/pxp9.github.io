@@ -8,7 +8,7 @@ googleAnalytics = "UA-PROPERTY_ID"
 
 [Params]
   description = "I am Pepe Márquez Romero a computer science student."
-  images = ['/digital-garden-logo.png']
+  images = ['/pxp9_logo.jpg']
 
 #[Params.newsletter]
  # title = ""

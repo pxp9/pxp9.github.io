@@ -1,4 +1,4 @@
-title: "Pepe's personal"
+title: "Pepe "
 author: "Pepe Márquez Romero"
 #description: "Made with <b style=\"color: #f45;\">&lt;3</b>"
 description: "Made with <b style=\"color: #f45;\">&lt;3</b>, Pepe Márquez Romero"
@@ -31,3 +31,4 @@ comments:
 
 plugins:
  - jekyll-feed
+ - jekyll-avatar

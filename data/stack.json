@@ -1,7 +1,7 @@
 [
    {
     "name": "NixOs",
-    "description": "A operating system based on Nix package manager which can manage develop enviroments easily",
+    "description": "An operating system based on Nix package manager which can manage develop enviroments easily",
     "link": "https://nixos.org/",
     "icon": "https://ucarecdn.com/3ce036cd-e325-4fba-bad5-e9f5c36e0950/-/format/auto/-/progressive/yes/-/preview/480x480/",
     "tag": "Productivity"

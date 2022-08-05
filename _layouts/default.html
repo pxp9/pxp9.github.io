@@ -30,6 +30,10 @@
 <header>
   <a href="{{ "/" | relative_url }}" class="title">{{ site.title | escape }}</a>
   {% include menu.html menu=pages %}
+  
+  {% assign user="pxp9" %}
+  {% avatar {{ user }} %}
+
 </header>
 
 {{ content }}

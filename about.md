@@ -3,6 +3,8 @@ title: "About"
 permalink: "/about/"
 layout: page
 ---
+{% assign user="hubot" %}
+{% avatar {{ user }} %}
 
 I am Pepe Márquez Romero a computer science student based in Madrid.
 

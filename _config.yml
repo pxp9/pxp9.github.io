@@ -5,7 +5,7 @@ description: "Made with <b style=\"color: #f45;\">&lt;3</b> by Pepe Márquez Rom
 permalink: /:title/
 lang: "en"
 excerpt_separator: "\n\n\n"
-date_format: "%d-%m-%Y"
+date_format: "%-d-%-m-%Y"
 # Layout
 
 show_excerpts: true        # show article excerpts on the home page

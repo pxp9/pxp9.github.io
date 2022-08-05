@@ -1,5 +1,6 @@
 title: "The software engineer oasis"
-author: "Pepe Márquez Romero"
+author: 
+  name: "Pepe Márquez Romero"
 #description: "Made with <b style=\"color: #f45;\">&lt;3</b>"
 description: "Made with <b style=\"color: #f45;\">&lt;3</b> by Pepe Márquez Romero"
 permalink: /:title/
@@ -10,7 +11,8 @@ date_format: "%-d-%-m-%Y"
 
 show_excerpts: true        # show article excerpts on the home page
 show_frame: true           # adds a gray frame to the site
-show_sidebar: false        # show a sidebar instead of the usual header
+show_sidebar: true        # show a sidebar instead of the usual header
+show_author: true        # show a sidebar instead of the usual header
 minimal: true             # use a dark header
 # Menu
 

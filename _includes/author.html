@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="{{ "/assets/css/sidebar.css" | relative_url }}" media="screen and (min-width: 9em)">
+<aside style="right : 0%" >
+  
+  {% assign user="pxp9" %}                                                                                                               
+  {% avatar {{ user }} size=80 rounded=true %}
+
+  <p>
+  {{ site.author.name }}
+  </p>
+  {%- for item in site.external -%}
+    {%- assign node = site.pages | where: "name", item.file | first -%}
+    {%- assign url = item.url | default: node.url -%}
+    {%- assign title = item.title | default: node.title -%}
+    {%- assign icon = item.icon | default: item.sidebaricon -%}
+    <p aria-label="{{ title }}" href="{{ url | relative_url }}" {% if url == page.url %}class="selected"{% endif %}>
+      <svg aria-hidden="true" class="icon"><use xlink:href="{{ "/assets/fontawesome/icons.svg" | relative_url }}#{{ icon }}"></use></svg>
+      <span aria-hidden="true">{{ title }}</span>
+    </p>
+  {%- endfor -%}
+  </nav>
+  <div class="description">{{ site.description }}</div>
+</aside>

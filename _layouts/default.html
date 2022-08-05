@@ -20,7 +20,7 @@
 {% if site.comments.disqus_shortname and page.layout == "post" %}<script src="//{{ site.comments.disqus_shortname }}.disqus.com/embed.js" async></script>{% endif %}
 {% if site.comments.isso_domain and page.layout == "post" %}<script data-isso="http://{{ site.comments.isso_domain }}" src="//{{ site.comments.isso_domain }}/js/embed.min.js"></script>{% endif %}
 {% if site.show_sidebar or site.sidebar %}{% include sidebar.html %}{% endif %}
-
+{% if site.show_author %}{% include author.html %}{% endif %}
 {% if site.navigation %}
   {% assign pages = site.navigation %}
 {% else %}
@@ -29,9 +29,6 @@
 
 <header>
   
-  {% assign user="pxp9" %}
-  {% avatar {{ user }} size=80 rounded=true %}
-
   <a href="{{ "/" | relative_url }}" class="title">{{ site.title | escape }}</a>
   {% include menu.html menu=pages %}
   

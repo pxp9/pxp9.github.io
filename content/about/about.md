@@ -15,7 +15,7 @@ I am Pepe Márquez Romero a computer science student based in Madrid.
  
  - I have stated developing in Python since March 2020.
  
- - I have done great contributions to open-source projects.
+ - I have done significant contributions to open-source projects.
 
 ## Open Source projects
 - [weather_bot](https://github.com/pxp9/weather_bot_rust/).

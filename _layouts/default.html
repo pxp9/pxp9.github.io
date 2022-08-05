@@ -30,7 +30,7 @@
 <header>
   
   {% assign user="pxp9" %}
-  {% avatar {{ user }} size=80 %}
+  {% avatar {{ user }} size=80 rounded=true %}
 
   <a href="{{ "/" | relative_url }}" class="title">{{ site.title | escape }}</a>
   {% include menu.html menu=pages %}

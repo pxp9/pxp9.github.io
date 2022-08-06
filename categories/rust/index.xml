@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>rust on The Software Engineer Oasis</title>
+    <link>https://pxp9.github.io/categories/rust/</link>
+    <description>Recent content in rust on The Software Engineer Oasis</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 06 Aug 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://pxp9.github.io/categories/rust/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Fang, async background processing for Rust</title>
+      <link>https://pxp9.github.io/articles/async-processing/</link>
+      <pubDate>Sat, 06 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://pxp9.github.io/articles/async-processing/</guid>
+      <description>&lt;p&gt;Even though the first stable version of Rust was released in 2015, there are still some holes in its ecosystem for solving common tasks. One of which is background processing.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

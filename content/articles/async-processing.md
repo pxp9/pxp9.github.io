@@ -3,11 +3,14 @@ title : Fang, async background processing for Rust
 date : 2022-08-06
 categories: [rust]
 images:
-- https://raw.githubusercontent.com/ayrat555/ayrat555.github.io/master/images/2022-08-06-factory.png 
+- /images/2022-08-06-factory.png
 summary: Async background processing for rust with tokio and postgres
 published : true
 ---
 
+<!--
+- https://raw.githubusercontent.com/ayrat555/ayrat555.github.io/master/images/2022-08-06-factory.png 
+-->
 
 Even though the first stable version of Rust was released in 2015, there are still some holes in its ecosystem for solving common tasks. One of which is background processing.
 

@@ -1,9 +1,9 @@
 ---
 title : 1. Fang, async background processing for Rust
-date : 2022-08-08
+date : 2022-08-06
 categories: [rust]
 images:
-- https://raw.githubusercontent.com/ayrat555/ayrat555.github.io/43a8987eb81927afc3fc8c8e42cfd41e4a091462/images/2022-08-08-factory.png
+- https://github.com/ayrat555/ayrat555.github.io/blob/master/images/2022-08-06-factory.png
 summary: Async background processing for rust with tokio and postgres
 published : true
 ---

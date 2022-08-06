@@ -1,15 +1,13 @@
 ---
-title : 2. Fang, Async background processing for rust
-date : 2022-05-07
+title : 1. Fang, async background processing for Rust
+date : 2022-08-08
 categories: [rust]
 images:
 - https://raw.githubusercontent.com/ayrat555/ayrat555.github.io/43a8987eb81927afc3fc8c8e42cfd41e4a091462/images/2022-08-08-factory.png
 summary: Async background processing for rust with tokio and postgres
-published : false
+published : true
 ---
 
-
-## Introduction
 
 Even though the first stable version of Rust was released in 2015, there are still some holes in its ecosystem for solving common tasks. One of which is background processing.
 
@@ -58,10 +56,19 @@ For some lightweight background tasks, it's cheaper to run them on the same thre
 
 - Each worker is started as a tokio task
 - If any worker fails during task execution, it's restarted
-- Tasks are saved to a Postgres database. Instead of diesel, [tokio-postgres](https://github.com/sfackler/rust-postgres) is used to interact with a db
-- The implementation is based on traits so it's easy to implement additonal backends (redis, in-memory) to store tasks. The threaded processing uses the [diesel](https://github.com/diesel-rs/diesel) ORM which blocks the thread.
+- Tasks are saved to a Postgres database. Instead of diesel, [tokio-postgres](https://github.com/sfackler/rust-postgres) is used to interact with a db. The threaded processing uses the [diesel](https://github.com/diesel-rs/diesel) ORM which blocks the thread.
+- The implementation is based on traits so it's easy to implement additional backends (redis, in-memory) to store tasks.
 
 ## Usage
+
+The usage is straightforward:
+
+1. Define a serializable task by adding `serde` derives to a task struct.
+2. Implement `AsyncRunnable` runnable trait for fang to be able to run it.
+3. Start workers.
+4. Enqueue tasks.
+
+Let's go over each step.
 
 ### Define a job
 
@@ -78,6 +85,9 @@ impl MyTask {
     }
 }
 ```
+
+Fang re-exports `serde` so it's not required to add it Cargo.toml file
+
 
 ### Implement the AsyncRunnable trait
 
@@ -101,6 +111,9 @@ impl AsyncRunnable for MyTask {
     }
 }
 ```
+
+- Fang uses the [typetag library](https://github.com/dtolnay/typetag) to serialize trait objects and save them to the queue.
+- The [async-trait](https://github.com/dtolnay/async-trait) is used for implementing async traits
 
 ### Init queue
 
@@ -139,6 +152,23 @@ queue
 
 ## Pitfalls
 
-- async traits
-- heavy tasks
-- separate runtime or threaded processing
+The async processing is suitable for lightweight tasks. But for heavier tasks it's advised to use one of the following approaches:
+
+- start a separate tokio runtime to run fang workers
+- use the threaded processing feature implemented in fang instead of the async processing
+
+## Future directions
+
+There are a couple of features planned for fang:
+
+- Retries with different backoff modes
+- Additional backends (in-memory, redis)
+- Graceful shutdown for async workers (for the threaded processing this feature is implemented)
+- Cron job
+
+## Conclusion
+
+The project is available on [GitHub](https://github.com/ayrat555/fang)
+
+The async feature and this post is written in collaboration between [Ayrat Badykov](https://www.badykov.com/) ([github](https://github.com/ayrat555)) and [Pepe Márquez Romero](https://pxp9.github.io/) ([github](https://github.com/pxp9))
+

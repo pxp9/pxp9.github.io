@@ -3,6 +3,7 @@ title: 1. Theme Installation
 date: 2021-12-19
 images: 
 - https://raw.githubusercontent.com/apvarun/digital-garden-hugo-theme/main/images/digital-garden-logo.png
+published: false
 ---
 
 Create a new hugo website or open your existing hugo site.

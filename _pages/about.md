@@ -1,5 +1,6 @@
 ---
 title: About
+permalink: /about/
 ---
 
 I am Pepe Márquez Romero a computer science student based in Madrid.

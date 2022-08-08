@@ -58,7 +58,7 @@ plugins:
   - jekyll-redirect-from
 
 author:
-  name   : "Pepe Maŕquez Romero"
+  name   : "Pepe Márquez Romero"
   avatar : "/assets/images/bio-photo.jpg"
   bio    : "Computer science student"
   links:

@@ -66,6 +66,9 @@ author:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/pxp9"
+    - label : "Mail"
+      icon: "fab fa-fw fa-envelope"
+      url: "mailto:pepe.marquezromero@gmail.com"
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
       url: "https://twitter.com/_PXP9_"
@@ -75,6 +78,9 @@ footer:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/pxp9"
+    - label : "Mail"
+      icon: "fab fa-fw fa-envelope"
+      url: "mailto:pepe.marquezromero@gmail.com"
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
       url: "https://twitter.com/_PXP9_"
@@ -88,7 +94,7 @@ defaults:
       layout: single
       author_profile: true
       read_time: true
-      comments: true
+      comments: false
       share: true
       related: true
       toc: true
@@ -108,10 +114,10 @@ tag_archive:
   type: liquid
   path: /tags/
 
-comments:
-  provider: "disqus"
-  disqus:
-    shortname: "pxp9"
+    #comments:
+    #provider: "disqus"
+    #disqus:
+    #shortname: "pxp9"
 
 analytics:
   provider: "google-gtag"

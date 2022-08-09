@@ -23,5 +23,5 @@ I am Pepe Márquez Romero a computer science student based in Madrid.
 - [fang](https://github.com/ayrat555/fang).
 
 ## Talks
-- [A Rust introduction](https://www.youtube.com/watch?v=NL6d74ISbss) - [repo of the tak](https://github.com/pxp9/acm_rust)
+- [A Rust introduction](https://www.youtube.com/watch?v=NL6d74ISbss) - [repo of the talk](https://github.com/pxp9/acm_rust)
 

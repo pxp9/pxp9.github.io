@@ -17,7 +17,7 @@ title: The software engineer oasis
 email: pepe.marquezromero@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   Programming and stuff
-twitter_username: _PXP9_
+twitter_username: Pi_My_Rho
 github_username: pxp9
 minimal_mistakes_skin: dark
 search: true
@@ -61,7 +61,7 @@ plugins:
 author:
   name   : "Pepe Márquez Romero"
   avatar : "/assets/images/bio-photo.jpg"
-  bio    : "Computer science student"
+  bio    : "Software engineer"
   links:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
@@ -81,9 +81,9 @@ footer:
     - label : "Mail"
       icon: "fab fa fa-envelope"
       url: "mailto:pepe.marquezromero@gmail.com"
-    - label: "Twitter"
+    - label: "X"
       icon: "fab fa-fw fa-twitter-square"
-      url: "https://twitter.com/_PXP9_"
+      url: "https://x.com/Pi_My_Rho"
 
 defaults:
   # _posts

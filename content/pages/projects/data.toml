@@ -6,6 +6,15 @@ links = [
     { name = "github", url = "https://github.com/pxp9/lazy_doc" },
     { name = "docs", url = "https://hexdocs.pm/lazy_doc/api-reference.html" },
 ]
+[[project]]
+name = "Fang"
+desc = ""
+tags = ["rust"]
+links = [
+    { name = "github", url = "https://github.com/ayrat555/fang" },
+    { name = "docs", url = "https://docs.rs/fang/latest/fang/" },
+]
+
 
 
 # [[project]]

@@ -271,7 +271,7 @@ Thankfully, there are already super smart people in the Rust ecosystem that thou
 this problem, and I observed that there was already a `crate` for this `num_bigint`.
 
 Another thing, one of the guys who did `rustler`, thought about this problem and
-he integrated`rustler` with `num_bigint`, so this way you can have a translation layer with these kind of integers in Rust. Take a look the [Encoder impl for BigInt](https://docs.rs/rustler/latest/rustler/struct.BigInt.html#impl-Encoder-for-BigInt), this is the translation layer for Rust `BigInt` to Elixir `term` which is an `integer`.
+he integrated `rustler` with `num_bigint`, so this way you can have a translation layer with these kind of integers in Rust. Take a look the [Encoder impl for BigInt](https://docs.rs/rustler/latest/rustler/struct.BigInt.html#impl-Encoder-for-BigInt), this is the translation layer for Rust `BigInt` to Elixir `term` which is an `integer`.
 
 Lets take a look to the implementation with `BigInt`
 
@@ -350,7 +350,7 @@ This is the setup for low inputs.
       },
       inputs: %{
         "1" => 1,
-        "71" => 75,
+        "71" => 71,
         "100" => 100
       },
       parallel: 2
@@ -360,6 +360,32 @@ This is the setup for low inputs.
 ```
 
 Before you look the results you need to consider that Rust expanding nums implementation was run with the dirty scheduler in Erlang, without it is still the worst, because of the overhead it has, but not so much worse around 33x slower. Also consider invalid $\Phi$ formula implementations for the `input >= 71`, because they start to not give a precise value after that.
+
+As you can see here the result for input 71 is correct for 72 is not.
+
+``` elixir
+### Input 71
+iex(1)> FibRustElixir.phi_formula(71)
+308061521170129
+
+iex(2)> TurboFibonacci.phi_formula(71)
+308061521170129.0
+
+iex(3)> TurboFibonacci.fib(71)
+308061521170129
+
+### Input 72
+iex(4)> TurboFibonacci.phi_formula(72)
+498454011879263.0
+
+iex(5)> FibRustElixir.phi_formula(72)
+498454011879264
+
+iex(6)> TurboFibonacci.fib(72)
+498454011879264
+```
+
+Here are the results for the benchmark low inputs.
 
 ```
 ##### With input 1 #####

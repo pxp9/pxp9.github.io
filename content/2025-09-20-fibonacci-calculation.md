@@ -118,7 +118,7 @@ table](https://hexdocs.pm/elixir/main/ets.html), so if we have an already
 computed result we do not need to recompute it all.
 
 We can do a simple benchmark between this implementation with memoization and
-the other one with not demonstrates how powerful is this technique.
+the other one with not, so it demonstrates how powerful is this technique.
 
 ```
 ##### With input 1 #####

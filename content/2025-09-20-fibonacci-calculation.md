@@ -17,16 +17,13 @@ mermaid = true
 ## Idea
 
 The idea of this article is to explore the Fibonacci sequence algorithms in
-Elixir, explore how `rustler` and Rust can help us in order to compute even
-faster. The main objective of the article is to compute the largest Fibonacci
-number as fast as possible.
+Elixir, explore optimizations which can be done and explore how native code can
+help us in order to compute even faster. The main objective of the article is to
+compute the largest Fibonacci number as fast as possible.
 
 ### Start with the Math \!
 
 Most powerful algorithms out there rely on a quite simple math principle.
-
-In our case we can see these 2 formulas for the computation of the Nth Fibonacci
-number.
 
 $$ Fn = F\_{n-1} + F\_{n-2} $$
 
@@ -34,14 +31,9 @@ This principle means that if you know the 2 previous terms of the series you can
 compute the next one. So the Fibonacci series is recursive because in the
 definition of the series appears the series itself.
 
-$$ Fn = \\frac{\\phi^{n} - (-\\phi^{-n})} {\\sqrt{5}} $$
-
-This principle allow us to calculate any number of the sequence by just knowing
-the value of $\\phi$ constant.
-
 ### Math is not real life.
 
-Based on the math we have seen before you can think that this algoritm.
+Based on the math we have seen before we can think this algorithm:
 
 ``` elixir
 
@@ -76,11 +68,12 @@ any result.
 
 {% end %}
 
-As you can see the complexity of this algorithm grows exponentially $O(2^n)$.
+As you can see from this example, the complexity of this algorithm grows exponentially $O(2^n)$.
+Notice that we are doing multiple times the same computation $F_{n-2}$ or $F_{n-3}$.
 
 ### Improving naive solution.
 
-One improvement we can do to the most obvious solution is to apply [Dynamic
+One improvement we can do to the solution is to apply [Dynamic
 programming](https://en.wikipedia.org/wiki/Dynamic_programming). We can optimize
 the algorithm by doing memoization, so the complexity so be reduced a lot.
 
@@ -120,9 +113,44 @@ the algorithm by doing memoization, so the complexity so be reduced a lot.
 
 ```
 
-This is the same algorithm as before but we cache the results in an [ETS
+This is the same algorithm as before, but we cache the results in an [ETS
 table](https://hexdocs.pm/elixir/main/ets.html), so if we have an already
-computed result we dont need to recompute it all.
+computed result we do not need to recompute it all.
+
+We can do a simple benchmark between this implementation with memoization and
+the other one with not demonstrates how powerful is this technique.
+
+```
+##### With input 1 #####
+Name                                        ips        average  deviation         median         99th %
+Elixir O(2^n) Algorithm                 16.64 M       60.09 ns ±42065.44%          45 ns          69 ns
+Elixir O(2^n) Algorithm Memo             1.16 M      864.46 ns  ±5353.57%         792 ns        1150 ns
+
+Comparison:
+Elixir O(2^n) Algorithm                 16.64 M
+Elixir O(2^n) Algorithm Memo             1.16 M - 14.39x slower +804.37 ns
+
+##### With input 20 #####
+Name                                        ips        average  deviation         median         99th %
+Elixir O(2^n) Algorithm Memo             1.51 M        0.66 μs  ±9240.96%        0.54 μs        0.88 μs
+Elixir O(2^n) Algorithm                0.0102 M       98.09 μs    ±55.81%       96.94 μs      105.33 μs
+
+Comparison:
+Elixir O(2^n) Algorithm Memo             1.51 M
+Elixir O(2^n) Algorithm                0.0102 M - 148.28x slower +97.43 μs
+
+##### With input 45 #####
+Name                                        ips        average  deviation         median         99th %
+Elixir O(2^n) Algorithm Memo             1.48 M      0.00000 s  ±8725.95%      0.00000 s      0.00000 s
+Elixir O(2^n) Algorithm               0.00000 M        16.21 s     ±0.13%        16.21 s        16.22 s
+
+Comparison:
+Elixir O(2^n) Algorithm Memo             1.48 M
+Elixir O(2^n) Algorithm               0.00000 M - 24065479.81x slower +16.21 s
+```
+
+For each input we flush the memoization cache, because it will be unfair it we
+leave it, since it will not compute every N at least once.
 
 ### Sometimes improving is not enough.
 
@@ -160,9 +188,14 @@ This implementation still uses the same mathematical principle, but it does less
 {% end %}
 
 
-### What about the other math approach ?
+### What about the another math approach ?
 
-Remember that by knowing the $\phi$ constant we can compute the Nth Fibonacci, here is the implementation.
+There is another mathematical formula called [Binet's formula](https://en.wikipedia.org/wiki/Fibonacci_sequence#Closed-form_expression).
+
+$$ Fn = \\frac{\\phi^{n} - (-\\phi^{-n})} {\\sqrt{5}} $$
+
+This principle allow us to calculate any number of the sequence by just knowing
+the value of $\\phi$ constant.
 
 ```elixir
   def phi_formula(n),
@@ -180,19 +213,18 @@ Remember that by knowing the $\phi$ constant we can compute the Nth Fibonacci, h
 
 ```
 
-This implementation is in fact $O(1)$ or $O(log n)$, depends on the complexity of `:math.pow` function. What is the tradeoff ? This implementation is an approximation so you will be stacking more error. Notice that one divided the square root of 5 is calculated with the quake 3 algorithm, another alternative would be to hardcode this constant in the algorithm.
+This implementation is in fact $O(1)$ or $O(log n)$, depends on the complexity of `:math.pow` function. What is the tradeoff ? This implementation is an approximation so you will be stacking more error. Notice that one divided the square root of 5 is calculated with the [quake 3 algorithm](https://www.youtube.com/watch?v=p8u_k2LIZyo&pp=ygUgcXVha2UgMyBmYXN0IGludmVyc2Ugc3F1YXJlIHJvb3Q%3D), another alternative would be to hardcode this constant in the algorithm.
 
 ### The end ?
 
-So this is the end ?
+So... Is this the end ?
 
 NO, because you should know that Elixir runs in the Erlang VM which probably has some overhead
 while calculating the stuff. We can try to make an Erlang `NIF` (__Native Implementation Function__), to see if it is faster than just standard Elixir.
 
-To do so, you can take a look to `rustler`, which is fantastic `crate`/elixir library.
+To do so, we can take a look to `rustler`, which is fantastic `crate`/elixir library.
 
 This is the code we will be using in Rust,
-
 
 ```rust
 #[rustler::nif]
@@ -211,7 +243,7 @@ fn fib(n: u128) -> u128 {
 }
 ```
 
-and for the for the $\phi$ based algorithm,
+and for the $\phi$ based algorithm,
 
 ```rust
 const PHI: f64 = 1.618033988749895;
@@ -233,7 +265,7 @@ fn phi_formula(n: i32) -> f64 {
 
 Of course the `phi_formula` implementation has the same issue as the elixir one since it is an approximation, it should not be super precise at large scale.
 
-Lets talk about the Rust implementation of Fib, as you can see is $O(N)$ and notice we are just using 2 variables instead of 3, this is because an arithmetic operation should be faster than storing in a CPU register. Also notice that Rust forces us to put types and,
+Lets talk about the Rust implementation of fibonacci, as you can see is $O(N)$ and notice we are just using 2 variables instead of 3, this is because an arithmetic operation should be faster than storing in a CPU register. Also notice that Rust forces us to put types and,
 we are using `u128`, so this way we can compute and store really big integer.
 
 ### Wait something weird is happening
@@ -258,14 +290,14 @@ iex(4)> TurboFibonacci.fib(200)
 178502649656846143791255889261670949781
 ```
 
-It seems everything is correct, for `100`, but things are getting weird for `200`, what the hell the same algorithm gives different result ?
-
+It seems everything is correct, for `100`, but things are getting weird for `200`.
+What the hell the same algorithm gives different result ?
 
 The answer is called overflow. Since Rust is working with limited size integers it overflows for big numbers.
 
-Why Elixir does not have this problem ? It is because Elixir integers are dynamically sized. It creates a little bit of overhead because you must do allocations to fit the integer, but it allows you to have an "infinite" integer. I recommend this read [Learning Elixir: Understanding Numbers](https://dev.to/abreujp/understanding-numbers-in-elixir-na5), in order to have better understanding of what Elixir is doing.
+Why Elixir does not have this problem ? It is because Elixir integers are dynamically sized. It creates a little bit of overhead because you must do allocations to fit the integer, but it allows you to have an "infinite" integer. I recommend this read [Learning Elixir: Understanding Numbers](https://dev.to/abreujp/understanding-numbers-in-elixir-na5), in order to have a better understanding of what Elixir is doing.
 
-then I wondered, What if I can make the same Elixir behaviour in Rust ?
+Then I wondered, What if I can make the same Elixir behaviour in Rust ?
 
 Thankfully, there are already super smart people in the Rust ecosystem that thought about
 this problem, and I observed that there was already a `crate` for this `num_bigint`.
@@ -292,10 +324,10 @@ fn fib_bignums(n: u128) -> BigInt {
 }
 ```
 
-As you can see nothing really changes, now we are using the big integer which is resizable,
+As you can see nothing really changes, now we are using the big integer which are resizable,
 and allow us to store massive integers.
 
-Lets try with this implementation and see if gives the same result as Elixir one.
+Lets try with this implementation and see if it gives the same result as Elixir one.
 
 ```elixir
 ## Elixir with input 200
@@ -342,6 +374,7 @@ This is the setup for low inputs.
     Benchee.run(
       %{
         "Elixir O(N) Algorithm" => &fib/1,
+        "Elixir O(2^n) Algorithm Memo" => &dp_slow_fib/1,
         "Elixir O(1) Algorithm Phi formula" => &phi_formula/1,
         "Rust O(1) Algorithm Phi formula" => &TurboFibonacci.phi_formula/1,
         "Rust O(N) Algorithm" => &TurboFibonacci.fib/1,
@@ -353,24 +386,25 @@ This is the setup for low inputs.
         "71" => 71,
         "100" => 100
       },
-      parallel: 2
+      parallel: 2,
+      after_scenario: fn _input ->
+        if :ets.whereis(:fibs) != :undefined do
+          :ets.delete(:fibs)
+        end
+      end
     )
     nil
   end
 ```
 
-Before you look the results you need to consider that Rust expanding nums implementation was run with the dirty scheduler in Erlang, without it is still the worst, because of the overhead it has, but not so much worse around 33x slower. Also consider invalid $\Phi$ formula implementations for the `input >= 71`, because they start to not give a precise value after that.
+Before you look the results you need to consider that Rust expanding nums implementation was run with the dirty scheduler in Erlang, without it is still the worst, because of the overhead it has, but not so much worse around 33x slower. Also consider invalid $\Phi$ formula implementations for the `input >= 71` or `input >= 75`, because they start to not give a precise value after that.
 
-As you can see here the result for input 71 is correct for 72 is not.
+As you can see here the result for input 71 is correct for 72 is not, as well in the $\phi$ elixir implementation.
 
 ``` elixir
 ### Input 71
-iex(1)> FibRustElixir.phi_formula(71)
-308061521170129
-
 iex(2)> TurboFibonacci.phi_formula(71)
 308061521170129.0
-
 iex(3)> TurboFibonacci.fib(71)
 308061521170129
 
@@ -380,9 +414,20 @@ iex(4)> TurboFibonacci.phi_formula(72)
 
 iex(5)> FibRustElixir.phi_formula(72)
 498454011879264
-
 iex(6)> TurboFibonacci.fib(72)
 498454011879264
+
+### Input 75
+iex(12)> FibRustElixir.phi_formula(75)
+2111485077978050
+iex(13)> TurboFibonacci.fib(75)
+2111485077978050
+
+### Input 76
+iex(14)> FibRustElixir.phi_formula(76)
+3416454622906708
+iex(15)> TurboFibonacci.fib(76)
+3416454622906707
 ```
 
 Here are the results for the benchmark low inputs.
@@ -390,59 +435,71 @@ Here are the results for the benchmark low inputs.
 ```
 ##### With input 1 #####
 Name                                         ips        average  deviation         median         99th %
-Elixir O(N) Algorithm                    25.08 M       39.87 ns ±71735.16%          26 ns          53 ns
-Rust O(1) Algorithm Phi formula          14.81 M       67.54 ns  ±2031.19%          57 ns         136 ns
-Rust O(N) Algorithm                      11.56 M       86.50 ns ±35806.92%          67 ns         141 ns
-Elixir O(1) Algorithm Phi formula         5.23 M      191.06 ns   ±185.20%         152 ns        1240 ns
-Rust O(N) Algorithm expanding nums        0.36 M     2803.13 ns    ±95.38%        2526 ns        7607 ns
+Elixir O(N) Algorithm                    16.38 M       61.07 ns ±45774.27%          44 ns          71 ns
+Rust O(1) Algorithm Phi formula           9.15 M      109.26 ns  ±4221.28%         100 ns         210 ns
+Rust O(N) Algorithm                       8.26 M      121.09 ns ±23343.76%         100 ns         203 ns
+Elixir O(1) Algorithm Phi formula         3.31 M      302.31 ns   ±136.52%         260 ns         531 ns
+Elixir O(2^n) Algorithm Memo              1.19 M      838.18 ns  ±5624.56%         787 ns        1101 ns
+Rust O(N) Algorithm expanding nums       0.188 M     5308.94 ns    ±84.14%        4395 ns    16176.06 ns
 
 Comparison:
-Elixir O(N) Algorithm                    25.08 M
-Rust O(1) Algorithm Phi formula          14.81 M - 1.69x slower +27.67 ns
-Rust O(N) Algorithm                      11.56 M - 2.17x slower +46.63 ns
-Elixir O(1) Algorithm Phi formula         5.23 M - 4.79x slower +151.19 ns
-Rust O(N) Algorithm expanding nums        0.36 M - 70.31x slower +2763.26 ns
+Elixir O(N) Algorithm                    16.38 M
+Rust O(1) Algorithm Phi formula           9.15 M - 1.79x slower +48.19 ns
+Rust O(N) Algorithm                       8.26 M - 1.98x slower +60.03 ns
+Elixir O(1) Algorithm Phi formula         3.31 M - 4.95x slower +241.25 ns
+Elixir O(2^n) Algorithm Memo              1.19 M - 13.73x slower +777.11 ns
+Rust O(N) Algorithm expanding nums       0.188 M - 86.93x slower +5247.87 ns
 
 ##### With input 100 #####
 Name                                         ips        average  deviation         median         99th %
-Rust O(1) Algorithm Phi formula          13.02 M       76.80 ns  ±1894.27%          68 ns         135 ns
-Rust O(N) Algorithm                       7.19 M      139.00 ns   ±282.57%         127 ns         282 ns
-Elixir O(1) Algorithm Phi formula         4.78 M      209.15 ns   ±250.74%         161 ns        1281 ns
-Elixir O(N) Algorithm                     1.13 M      885.56 ns  ±2259.49%         793 ns        1880 ns
-Rust O(N) Algorithm expanding nums       0.125 M     7982.54 ns   ±154.43%        8692 ns       12798 ns
+Rust O(1) Algorithm Phi formula           8.09 M      123.63 ns   ±263.70%         113 ns         195 ns
+Rust O(N) Algorithm                       4.63 M      215.80 ns   ±356.51%         198 ns         419 ns
+Elixir O(1) Algorithm Phi formula         3.15 M      317.82 ns   ±209.58%         277 ns         615 ns
+Elixir O(2^n) Algorithm Memo              1.45 M      687.71 ns  ±8165.87%         587 ns         924 ns
+Elixir O(N) Algorithm                     0.66 M     1517.15 ns  ±2172.62%        1380 ns        1928 ns
+Rust O(N) Algorithm expanding nums      0.0784 M    12753.08 ns    ±55.31%       13905 ns       24389 ns
 
 Comparison:
-Rust O(1) Algorithm Phi formula          13.02 M
-Rust O(N) Algorithm                       7.19 M - 1.81x slower +62.20 ns
-Elixir O(1) Algorithm Phi formula         4.78 M - 2.72x slower +132.35 ns
-Elixir O(N) Algorithm                     1.13 M - 11.53x slower +808.76 ns
-Rust O(N) Algorithm expanding nums       0.125 M - 103.94x slower +7905.74 ns
+Rust O(1) Algorithm Phi formula           8.09 M
+Rust O(N) Algorithm                       4.63 M - 1.75x slower +92.17 ns
+Elixir O(1) Algorithm Phi formula         3.15 M - 2.57x slower +194.18 ns
+Elixir O(2^n) Algorithm Memo              1.45 M - 5.56x slower +564.08 ns
+Elixir O(N) Algorithm                     0.66 M - 12.27x slower +1393.51 ns
+Rust O(N) Algorithm expanding nums      0.0784 M - 103.15x slower +12629.45 ns
 
 ##### With input 71 #####
 Name                                         ips        average  deviation         median         99th %
-Rust O(1) Algorithm Phi formula          12.24 M       81.68 ns  ±1200.41%          72 ns         153 ns
-Rust O(N) Algorithm                       9.60 M      104.17 ns ±28917.74%          81 ns         179 ns
-Elixir O(1) Algorithm Phi formula         5.29 M      189.02 ns   ±486.11%         151 ns        1267 ns
-Elixir O(N) Algorithm                     1.90 M      527.35 ns  ±4269.74%         494 ns         761 ns
-Rust O(N) Algorithm expanding nums       0.156 M     6429.73 ns    ±70.38%        6674 ns       11008 ns
+Rust O(1) Algorithm Phi formula           7.75 M      128.97 ns  ±4535.63%         117 ns         230 ns
+Rust O(N) Algorithm                       6.54 M      152.88 ns ±19215.97%         123 ns         224 ns
+Elixir O(1) Algorithm Phi formula         3.40 M      294.01 ns   ±339.67%         258 ns         533 ns
+Elixir O(2^n) Algorithm Memo              1.43 M      700.42 ns  ±9294.91%         581 ns         904 ns
+Elixir O(N) Algorithm                     1.15 M      869.80 ns   ±184.80%         853 ns        1259 ns
+Rust O(N) Algorithm expanding nums      0.0940 M    10633.12 ns    ±73.98%       10948 ns       20597 ns
 
 Comparison:
-Rust O(1) Algorithm Phi formula          12.24 M
-Rust O(N) Algorithm                       9.60 M - 1.28x slower +22.49 ns
-Elixir O(1) Algorithm Phi formula         5.29 M - 2.31x slower +107.34 ns
-Elixir O(N) Algorithm                     1.90 M - 6.46x slower +445.67 ns
-Rust O(N) Algorithm expanding nums       0.156 M - 78.72x slower +6348.05 ns
+Rust O(1) Algorithm Phi formula           7.75 M
+Rust O(N) Algorithm                       6.54 M - 1.19x slower +23.91 ns
+Elixir O(1) Algorithm Phi formula         3.40 M - 2.28x slower +165.04 ns
+Elixir O(2^n) Algorithm Memo              1.43 M - 5.43x slower +571.45 ns
+Elixir O(N) Algorithm                     1.15 M - 6.74x slower +740.83 ns
+Rust O(N) Algorithm expanding nums      0.0940 M - 82.44x slower +10504.15 ns
 ```
 
-The conclusion we can make here is that for really small inputs Rust NIF is worth it to use even if Elixir wins for input 1 because it is a clause in the function almost without any overhead. $\Phi$ algorithm is not so fast for low inputs so it is not worth to use.
-Notice that Rust expandable integers implementation has a super big overhead which is not compensate with the big input. 
+The conclusion we can make here is that for really small inputs Rust NIF is
+worth it to use even if Elixir wins for input 1 because it is a clause in the
+function almost without any overhead. $\Phi$ algorithm is not so fast for low
+inputs so it is not worth to use. Notice that Rust expandable integers
+implementation has a super big overhead which is not compensate with the small
+input.
 
 This is the setup I was doing for Big numbers,
 
-As you can see here we have much bigger inputs, which probably the other functions will die on precision or die on time.
+As you can see here we have much bigger inputs, other functions cannot be included in
+this benchmark because they will lose `precision`, they will take too much `time` or
+they will take too much `memory`.
 
 ```elixir
-  def bench_large_shit() do
+  def bench_large_numbers() do
     Benchee.run(
       %{
         "Elixir O(N) Algorithm" => &fib/1,

@@ -149,6 +149,23 @@ Elixir O(2^n) Algorithm Memo             1.48 M
 Elixir O(2^n) Algorithm               0.00000 M - 24065479.81x slower +16.21 s
 ```
 
+{% mermaid() %}
+
+---
+config:
+  themeVariables:
+    xyChart:
+      plotColorPalette: '#D278AA, #7C6D91'
+---
+xychart
+    title "Benchmark Memo vs No Memo"
+    x-axis "Algorithm" [ "O(2^N) input 45", "Memo input 45", "O(2^N) input 20", "Memo input 20" ]
+    y-axis "Time in microseconds" 1 --> 200
+    bar [1622000, -1000000, 105.33, -1000000 ]
+    bar [-1000000, 1.150, -1000000, 0.88]
+
+{% end %}
+
 For each input we flush the memoization cache, because it will be unfair it we
 leave it, since it will not compute every N at least once.
 
@@ -485,6 +502,58 @@ Elixir O(N) Algorithm                     1.15 M - 6.74x slower +740.83 ns
 Rust O(N) Algorithm expanding nums      0.0940 M - 82.44x slower +10504.15 ns
 ```
 
+{% mermaid() %}
+
+---
+config:
+  themeVariables:
+    xyChart:
+      plotColorPalette: '#B7410E, #7C6D91'
+---
+xychart
+    title "Low numbers benchmark input 1"
+    x-axis "Algorithm" ["Rust Phi", "Elixir Phi", "Rust O(N)", "Elixir O(N)", "Elixir O(2^N) Memo" ]
+    y-axis "Time in nanoseconds" 1 --> 1200
+    bar [210, -1000, 203 ,-1000, -1000]
+    bar [-1000, 531, -1000 , 71, 1101]
+
+
+{% end %}
+
+{% mermaid() %}
+
+---
+config:
+  themeVariables:
+    xyChart:
+      plotColorPalette: '#B7410E, #7C6D91'
+---
+xychart
+    title "Low numbers benchmark input 71"
+    x-axis "Algorithm" ["Rust Phi", "Elixir Phi", "Rust O(N)", "Elixir O(N)", "Elixir O(2^N) Memo" ]
+    y-axis "Time in nanoseconds" 1 --> 1300
+    bar [230, -1000, 224 ,-1000, -1000]
+    bar [-1000, 533, -1000 , 1259, 904]
+
+{% end %}
+
+{% mermaid() %}
+
+---
+config:
+  themeVariables:
+    xyChart:
+      plotColorPalette: '#B7410E, #7C6D91'
+---
+xychart
+    title "Low numbers benchmark input 100"
+    x-axis "Algorithm" ["Rust O(N)", "Elixir O(N)", "Elixir O(2^N) Memo" ]
+    y-axis "Time in nanoseconds" 1 --> 2000
+    bar [419,-1000, -1000]
+    bar [-1000 , 1928, 924]
+
+{% end %}
+
 The conclusion we can make here is that for really small inputs Rust NIF is
 worth it to use even if Elixir wins for input 1 because it is a clause in the
 function almost without any overhead. $\Phi$ algorithm is not so fast for low
@@ -556,6 +625,40 @@ Comparison:
 Rust O(N) Algorithm expanding nums          0.44
 Elixir O(N) Algorithm                       0.23 - 1.93x slower +2.09 s
 ```
+
+{% mermaid() %}
+
+---
+config:
+  themeVariables:
+    xyChart:
+      plotColorPalette: '#B7410E, #7C6D91'
+---
+xychart
+    title "Big numbers benchmark"
+    x-axis "Algorithm and input" ["E(200k)", "R(200k)", "E(500k)", "R(500k)", "E(1M)", "R(1M)" ]
+    y-axis "Time in seconds" 0 --> 15
+    bar [-1, 0.33374, -1 , 2.25, -1, 11.24]
+    bar [0.72812, -1, 4.43 ,-1, 12.54, -1]
+
+{% end %}
+
+{% mermaid() %}
+
+---
+config:
+  themeVariables:
+    xyChart:
+      plotColorPalette: '#B7410E, #7C6D91'
+---
+xychart
+    title "Big numbers benchmark (2 million)"
+    x-axis "Algorithm and input" ["E(2M)", "R(2M)"]
+    y-axis "Time in seconds" 1 --> 100
+    bar [ -1 , 98.4 ]
+    bar [42.6  ,-1 ]
+
+{% end %}
 
 This is really interesting result, since it seems Rust expanding nums it pays the overhead by winning Elixir to all the inputs except for 2 million, I believe why Elixir wins in 2 million input is because some sort of reallocation optimization which is not in Rust.
 

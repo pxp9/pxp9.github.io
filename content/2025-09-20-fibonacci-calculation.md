@@ -46,7 +46,7 @@ Based on the math we have seen before we can think this algorithm:
 ```
 
 Let me tell you why this is a terrible idea. This algorithm is super slow,
-beacuse it does extra computations which are already computed and does not store
+beacuse it does extra computations which are already computed and it does not store
 any result.
 
 {% mermaid() %}
@@ -75,7 +75,7 @@ Notice that we are doing multiple times the same computation $F_{n-2}$ or $F_{n-
 
 One improvement we can do to the solution is to apply [Dynamic
 programming](https://en.wikipedia.org/wiki/Dynamic_programming). We can optimize
-the algorithm by doing memoization, so the complexity so be reduced a lot.
+the algorithm by doing memoization, so the complexity can be reduced a lot.
 
 ``` elixir
   def fib(n) do
@@ -115,7 +115,7 @@ the algorithm by doing memoization, so the complexity so be reduced a lot.
 
 This is the same algorithm as before, but we cache the results in an [ETS
 table](https://hexdocs.pm/elixir/main/ets.html), so if we have an already
-computed result we do not need to recompute it all.
+computed result, we do not need to recompute it all.
 
 We can do a simple benchmark between this implementation with memoization and
 the other one with not, so it demonstrates how powerful is this technique.
@@ -166,13 +166,13 @@ xychart
 
 {% end %}
 
-For each input we flush the memoization cache, because it will be unfair it we
+For each input we flush the memoization cache, because it will be unfair if we
 leave it, since it will not compute every N at least once.
 
 ### Sometimes improving is not enough.
 
-Dynamic programming implementation is pretty fast but it is not enough, we can
-get a better implementation just if we rethink the naive approach to make it
+Dynamic programming implementation is pretty fast, but it is not enough. We can
+get a better implementation if we rethink the naive approach to make it
 $O(n)$.
 
 One trick we can do is to store the previous 2 numbers as parameters of the recursion so this way, we dont need to compute all the other results each time.
@@ -188,7 +188,7 @@ One trick we can do is to store the previous 2 numbers as parameters of the recu
   defp fib(n, a, b), do: fib(n - 1, b, a + b)
 ```
 
-This implementation still uses the same mathematical principle, but it does less iterations and it uses way more less storage since it just needs to store the 2 previous fibonacci numbers.
+This implementation still uses the same mathematical principle, but it does less iterations, and it uses way more less storage since it just needs to store the 2 previous fibonacci numbers.
 
 {% mermaid() %}
 
@@ -205,7 +205,7 @@ This implementation still uses the same mathematical principle, but it does less
 {% end %}
 
 
-### What about the another math approach ?
+### What about another math approach ?
 
 There is another mathematical formula called [Binet's formula](https://en.wikipedia.org/wiki/Fibonacci_sequence#Closed-form_expression).
 
@@ -230,14 +230,14 @@ the value of $\\phi$ constant.
 
 ```
 
-This implementation is in fact $O(1)$ or $O(log n)$, depends on the complexity of `:math.pow` function. What is the tradeoff ? This implementation is an approximation so you will be stacking more error. Notice that one divided the square root of 5 is calculated with the [quake 3 algorithm](https://www.youtube.com/watch?v=p8u_k2LIZyo&pp=ygUgcXVha2UgMyBmYXN0IGludmVyc2Ugc3F1YXJlIHJvb3Q%3D), another alternative would be to hardcode this constant in the algorithm.
+This implementation is in fact $O(1)$ or $O(log n)$, depends on the complexity of `:math.pow` function. What is the tradeoff ? This implementation is an approximation so you will be stacking error. Notice that one divided the square root of 5 is calculated with the [quake 3 algorithm](https://www.youtube.com/watch?v=p8u_k2LIZyo&pp=ygUgcXVha2UgMyBmYXN0IGludmVyc2Ugc3F1YXJlIHJvb3Q%3D), another alternative would be to hardcode this constant in the algorithm.
 
 ### The end ?
 
 So... Is this the end ?
 
 NO, because you should know that Elixir runs in the Erlang VM which probably has some overhead
-while calculating the stuff. We can try to make an Erlang `NIF` (__Native Implementation Function__), to see if it is faster than just standard Elixir.
+while calculating. We can try to make an Erlang `NIF` (__Native Implementation Function__), to see if it is faster than just standard Elixir.
 
 To do so, we can take a look to `rustler`, which is fantastic `crate`/elixir library.
 
@@ -282,7 +282,7 @@ fn phi_formula(n: i32) -> f64 {
 
 Of course the `phi_formula` implementation has the same issue as the elixir one since it is an approximation, it should not be super precise at large scale.
 
-Lets talk about the Rust implementation of fibonacci, as you can see is $O(N)$ and notice we are just using 2 variables instead of 3, this is because an arithmetic operation should be faster than storing in a CPU register. Also notice that Rust forces us to put types and,
+Lets talk about the Rust implementation of Fibonacci, as you can see is $O(N)$ and notice we are just using 2 variables instead of 3, this is because an arithmetic operation should be faster than storing in a CPU register. Also notice that Rust forces us to put types and,
 we are using `u128`, so this way we can compute and store really big integer.
 
 ### Wait something weird is happening

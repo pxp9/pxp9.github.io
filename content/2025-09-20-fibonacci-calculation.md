@@ -46,7 +46,7 @@ Based on the math we have seen before we can think this algorithm:
 ```
 
 Let me tell you why this is a terrible idea. This algorithm is super slow,
-beacuse it does extra computations which are already computed and it does not store
+because it does extra computations which are already computed and it does not store
 any result.
 
 {% mermaid() %}

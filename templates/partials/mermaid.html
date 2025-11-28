@@ -4,7 +4,10 @@
   const initMermaid = (isDark) => {
     mermaid.initialize({
       theme: isDark ? "dark" : "default",
-      startOnLoad: false,
+      themeVariables: {
+        fontSize: "32px"
+      },
+      startOnLoad: false
     });
     mermaid.run();
   };

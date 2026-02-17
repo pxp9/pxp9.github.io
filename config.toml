@@ -47,8 +47,8 @@ smart_punctuation = false
 
 [markdown.highlighting]
 # The theme to use for code highlighting.
-# See below for list of allowed values.
-theme = "base16-ocean-dark"
+# Common themes: one-dark, ayu-dark, inspired-github, solarized-dark
+theme = "css"
 
 # The Kita theme style config.
 [extra]

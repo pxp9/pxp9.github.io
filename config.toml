@@ -42,15 +42,13 @@ taxonomies = [{ name = "tags", rss = true, paginate_by = 5 }]
 # Configuration of the Markdown rendering
 [markdown]
 # When set to "true", all code blocks are highlighted.
-highlight_code = true
 render_emoji = true
+smart_punctuation = false
 
-# A list of directories used to search for additional `.sublime-syntax` and `.tmTheme` files.
-extra_syntaxes_and_themes = []
-
+[markdown.highlighting]
 # The theme to use for code highlighting.
 # See below for list of allowed values.
-highlight_theme = "base16-ocean-dark"
+theme = "base16-ocean-dark"
 
 # The Kita theme style config.
 [extra]

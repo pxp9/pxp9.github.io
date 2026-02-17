@@ -41,14 +41,14 @@ taxonomies = [{ name = "tags", rss = true, paginate_by = 5 }]
 
 # Configuration of the Markdown rendering
 [markdown]
-# When set to "true", all code blocks are highlighted.
 render_emoji = true
 smart_punctuation = false
 
+# Syntax highlighting configuration
 [markdown.highlighting]
-# The theme to use for code highlighting.
-# Common themes: one-dark, ayu-dark, inspired-github, solarized-dark
-theme = "css"
+# Use dual themes for automatic light/dark mode support
+light_theme = "github-light"
+dark_theme = "github-dark"
 
 # The Kita theme style config.
 [extra]

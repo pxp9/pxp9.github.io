@@ -34,7 +34,7 @@
               with pkgs;
               [
                 zola
-                claude-code
+                opencode
               ];
           };
         }

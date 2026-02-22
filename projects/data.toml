@@ -1,0 +1,35 @@
+[[project]]
+name = "LazyDoc"
+desc = ""
+tags = ["elixir"]
+links = [
+    { name = "github", url = "https://github.com/pxp9/lazy_doc" },
+    { name = "docs", url = "https://hexdocs.pm/lazy_doc/api-reference.html" },
+]
+[[project]]
+name = "Fang"
+desc = ""
+tags = ["rust"]
+links = [
+    { name = "github", url = "https://github.com/ayrat555/fang" },
+    { name = "docs", url = "https://docs.rs/fang/latest/fang/" },
+]
+
+
+
+# [[project]]
+# name = "amet"
+# desc = "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Praesentium, nisi saepe dolor unde iusto dolore nam, vero optio consequuntur repudiandae et! Atque libero expedita laudantium cupiditate, sit explicabo sequi ipsa!"
+# tags = ["lorem", "ipsum"]
+# links = [
+#     { name = "website", url = "https://example.com" },
+#     { name = "github", url = "https://example.com" },
+#     { name = "docs", url = "https://example.com" },
+#     { name = "wiki", url = "https://example.com" },
+    # { name = "source", url = "https://example.com" },
+
+    # { name = "homepage", url = "https://example.com" },
+
+# ]
+
+

@@ -1,0 +1,554 @@
+<!doctype html>
+<html class="not-ready lg:text-base" lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+  <!-- Title -->
+  <title>
+    Fang, async background processing for Rust. - Software Engineer Oasis
+  </title>
+
+  <!-- Meta -->
+  <meta name="theme-color" />
+
+  
+  <!-- Author -->
+  
+  <!---->
+  
+  <!---->
+  
+  <!---->
+  
+  <!---->
+  
+  <!---->
+  <meta name="description" content="Async background processing for rust with tokio and postgres" />
+  <meta name="author" content="pxp9" />
+  <!-- The Open Graph protocol -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Fang, async background processing for Rust." />
+  <meta property="og:site_name" content="Software Engineer Oasis" />
+  <meta property="og:description" content="Async background processing for rust with tokio and postgres" />
+  <meta property="og:url" content="https:&#x2F;&#x2F;pmarquez.net&#x2F;async-processing&#x2F;" />
+  
+  <!---->
+  
+  <!---->
+  
+  <!---->
+  
+  <meta property="og:image" content="https://pmarquez.net/images/2022-08-06-factory.png" />
+  
+  <!---->
+  
+
+  <!-- CSS & JS -->
+  <link rel="preload stylesheet" as="style" href="https://pmarquez.net/main.css" />
+  <style>
+    :root {
+      --bg: #f4f4f5;
+      --bg-dark: #18181b;
+      --header: #e4e4e7;
+      --header-dark: #27272a;
+    }
+  </style>
+
+  
+
+  <!-- Dark Icon -->
+  <link rel="preload" as="image" href="https://pmarquez.net/icons/theme.svg" />
+
+  <!-- Math -->
+  
+  <!---->
+
+  <!-- Mermaid -->
+  
+  <!---->
+
+  <!-- Favicon -->
+  <link rel="icon" href="https://pmarquez.net/favicon.ico" />
+  <link rel="apple-touch-icon" href="https://pmarquez.net/apple-touch-icon.png" />
+
+  <!-- Feeds -->
+  
+  <!---->
+   
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title="RSS"
+    href="https://pmarquez.net/rss.xml"
+  />
+  
+  <!---->
+  
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https:&#x2F;&#x2F;pmarquez.net&#x2F;async-processing&#x2F;" />
+
+  <!-- Head inject -->
+  
+</head>
+
+  <body class="text-black duration-200 ease-out dark:text-white">
+    <header
+  class="header fixed top-0 z-40 mx-auto min-h-[3.5rem] w-full"
+>
+  <div class="mx-auto w-full max-w-4xl p-3 lg:flex lg:justify-between">
+    <div class="flex justify-between">
+      <div class="flex items-center">
+        <a class="text-2xl font-semibold" href="https://pmarquez.net">Software Engineer Oasis</a>
+        <div
+          class="btn-dark ml-4 h-6 w-6 shrink-0 cursor-pointer text-[0] [background:url(./icons/theme.svg)_left_center/cover_no-repeat] dark:invert dark:[background-position:right]"
+          role="button"
+          aria-label="Dark"
+        ></div>
+      </div>
+      
+      <div
+        class="btn-menu relative z-50 flex h-8 w-8 shrink-0 cursor-pointer flex-col items-center justify-center gap-2.5 lg:hidden"
+        role="button"
+        aria-label="Menu"
+      ></div>
+      
+    </div>
+    <script>
+      // base
+      const htmlClass = document.documentElement.classList;
+      setTimeout(() => {
+        htmlClass.remove("not-ready");
+      }, 10);
+
+      // mobile menu
+      const btnMenu = document.querySelector(".btn-menu");
+      btnMenu?.addEventListener("click", () => {
+        htmlClass.toggle("open");
+      });
+
+      // dark theme
+      const setDark = (isDark) => {
+        if (isDark) {
+          document.body.dispatchEvent(new CustomEvent("set-theme", { detail: "dark" }));
+          htmlClass.add("dark");
+        } else {
+          document.body.dispatchEvent(new CustomEvent("set-theme", { detail: "light" }));
+          htmlClass.remove("dark");
+        }
+        localStorage.setItem("dark", isDark);
+      };
+
+      // init
+      const darkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+      if (htmlClass.contains("dark")) {
+        setDark(true);
+      } else {
+        const darkVal = localStorage.getItem("dark");
+        setDark(darkVal ? darkVal === "true" : darkScheme.matches);
+      }
+
+      // listen system
+      darkScheme.addEventListener("change", (event) => {
+        setDark(event.matches);
+      });
+
+      // manual switch
+      const btnDark = document.querySelector(".btn-dark");
+      btnDark.addEventListener("click", () => {
+        setDark(localStorage.getItem("dark") !== "true");
+      });
+    </script>
+    
+    <nav class="flex w-full items-center lg:w-auto">
+      <ul
+        class="nav-wrapper flex w-full flex-col py-2 lg:w-auto lg:flex-row lg:self-center lg:py-0"
+      >
+        
+        <li>
+          <a
+            class="primary-link block py-2 text-center text-lg font-medium lg:px-3 lg:py-0"
+            href="https://pmarquez.net/projects"
+            >Projects</a
+          >
+        </li>
+        
+        <li>
+          <a
+            class="primary-link block py-2 text-center text-lg font-medium lg:px-3 lg:py-0"
+            href="https://pmarquez.net/archive"
+            >Archive</a
+          >
+        </li>
+        
+        <li>
+          <a
+            class="primary-link block py-2 text-center text-lg font-medium lg:px-3 lg:py-0"
+            href="https://pmarquez.net/tags"
+            >Tags</a
+          >
+        </li>
+        
+        <li>
+          <a
+            class="primary-link block py-2 text-center text-lg font-medium lg:px-3 lg:py-0"
+            href="https://pmarquez.net/about"
+            >About</a
+          >
+        </li>
+        
+      </ul>
+      <!-- Header Nav inject -->
+      
+    </nav>
+    
+  </div>
+</header>
+
+
+    <!-- Body Start inject -->
+    
+
+    <main
+      class="prose prose-neutral relative mx-auto min-h-[calc(100%-9rem)] max-w-3xl break-words px-4 pb-16 pt-32 dark:prose-invert prose-pre:rounded-lg prose-img:rounded-lg"
+    >
+      
+<article>
+  <!-- Page Start inject -->
+  
+
+  <header class="mb-16">
+    <h1 class="!my-0 pb-2.5">Fang, async background processing for Rust.</h1>
+    <div class="text-sm antialiased opacity-60">
+  
+  <time>2022-08-06</time>
+  <span class="mx-1">&middot;</span>
+  <span>4min</span>
+  <!---->
+  <!---->
+  <!---->
+  <!---->
+  
+  <span class="mx-1">&middot;</span>
+  <span>pxp9</span>
+  
+  <!-- Page Info inject -->
+  
+</div>
+
+  </header>
+
+  <!---->
+  <figure class="mb-12 mt-0">
+    <img
+      class="h-auto w-full rounded-lg"
+      src="https://pmarquez.net/images/2022-08-06-factory.png"
+      alt="A factory logo"
+    />
+  </figure>
+  
+
+  <!-- TOC -->
+  <!---->
+<div class="block-bg mb-12 flex rounded-lg p-2 text-lg">
+  <details>
+    <summary class="cursor-pointer py-1 pl-4">
+      <span>Table of Contents</span>
+    </summary>
+    <div class="px-2">
+      <ul>
+        
+        <li>
+          <a class="no-underline hover:underline" href="https://pmarquez.net/async-processing/#threaded-fang"
+            >Threaded Fang</a
+          >
+          
+        </li>
+        
+        <li>
+          <a class="no-underline hover:underline" href="https://pmarquez.net/async-processing/#async-fang"
+            >Async Fang</a
+          >
+          
+        </li>
+        
+        <li>
+          <a class="no-underline hover:underline" href="https://pmarquez.net/async-processing/#usage"
+            >Usage</a
+          >
+          
+          <ul>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/async-processing/#define-a-job"
+                >Define a job</a
+              >
+            </li>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/async-processing/#implement-the-asyncrunnable-trait"
+                >Implement the AsyncRunnable trait</a
+              >
+            </li>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/async-processing/#init-queue"
+                >Init queue</a
+              >
+            </li>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/async-processing/#start-workers"
+                >Start workers</a
+              >
+            </li>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/async-processing/#insert-tasks"
+                >Insert tasks</a
+              >
+            </li>
+            
+          </ul>
+          
+        </li>
+        
+        <li>
+          <a class="no-underline hover:underline" href="https://pmarquez.net/async-processing/#pitfalls"
+            >Pitfalls</a
+          >
+          
+        </li>
+        
+        <li>
+          <a class="no-underline hover:underline" href="https://pmarquez.net/async-processing/#future-directions"
+            >Future directions</a
+          >
+          
+        </li>
+        
+        <li>
+          <a class="no-underline hover:underline" href="https://pmarquez.net/async-processing/#conclusion"
+            >Conclusion</a
+          >
+          
+        </li>
+        
+      </ul>
+    </div>
+  </details>
+</div>
+
+<!---->
+
+  <!-- Content -->
+  <section><p>Even though the first stable version of Rust was released in 2015, there are still some holes in its ecosystem for solving common tasks. One of which is background processing.</p>
+<p>In software engineering background processing is a common approach for solving several problems:</p>
+<ul>
+<li>Carry out periodic tasks. For example, deliver notifications, update cached values.</li>
+<li>Defer expensive work so your application stays responsive while performing calculations in the background</li>
+</ul>
+<p>Most programming languages have go-to background processing frameworks/libraries. For example:</p>
+<ul>
+<li>Ruby - <a rel="external" href="https://github.com/mperham/sidekiq">sidekiq</a>. It uses Redis as a job queue.</li>
+<li>Python - <a rel="external" href="https://github.com/Bogdanp/dramatiq">dramatiq</a>. It uses RabbitMQ as a job queue.</li>
+<li>Elixir - <a rel="external" href="https://github.com/sorentwo/oban">oban</a>. It uses a Postgres DB as a job queue.</li>
+</ul>
+<p>The async programming (async/await) can be used for background processing but it has several major disadvantages if used directly:</p>
+<ul>
+<li>It doesn't give control of the number of tasks that are being executed at any given time. So a lot of spawned tasks can overload a thread/threads that they're started on.</li>
+<li>It doesn't provide any monitoring which can be useful to investigate your system and find bottlenecks</li>
+<li>Tasks are not persistent. So all enqueued tasks are lost on every application restart</li>
+</ul>
+<p>To solve these shortcomings of the async programming we implemented the async processing in <a rel="external" href="https://github.com/ayrat555/fang">the fang library</a>.</p>
+<h2 id="threaded-fang">Threaded Fang</h2>
+<p>Fang is a background processing library for rust. The first version of Fang was released exactly one year ago. Its key features were:</p>
+<ul>
+<li>Each worker is started in a separate thread</li>
+<li>A Postgres table is used as the task queue</li>
+</ul>
+<p>This implementation was written for a specific use case - <a rel="external" href="https://github.com/ayrat555/el_monitorro">el monitorro bot</a>. This specific implementation of background processing was proved by time. Each day it processes more and more feeds every minute (the current number is more than 3000). Some users host the bot on their infrastructure.</p>
+<p>You can find out more about the threaded processing in fang in <a rel="external" href="https://www.badykov.com/rust/fang/">this blog post</a>.</p>
+<h2 id="async-fang">Async Fang</h2>
+<blockquote>
+  <p>
+Async provides significantly reduced CPU and memory overhead, especially for workloads with a large amount of IO-bound tasks, such as servers and databases. All else equal, you can have orders of magnitude more tasks than OS threads, because an async runtime uses a small amount of (expensive) threads to handle a large amount of (cheap) tasks
+  </p>
+  <footer><cite title="Async book">From the Rust's Async book</cite></footer>
+</blockquote>
+<p>For some lightweight background tasks, it's cheaper to run them on the same thread using async instead of starting one thread per worker. That's why we implemented this kind of processing in fang. Its key features:</p>
+<ul>
+<li>Each worker is started as a tokio task</li>
+<li>If any worker fails during task execution, it's restarted</li>
+<li>Tasks are saved to a Postgres database. Instead of diesel, <a rel="external" href="https://github.com/sfackler/rust-postgres">tokio-postgres</a> is used to interact with a db. The threaded processing uses the <a rel="external" href="https://github.com/diesel-rs/diesel">diesel</a> ORM which blocks the thread.</li>
+<li>The implementation is based on traits so it's easy to implement additional backends (redis, in-memory) to store tasks.</li>
+</ul>
+<h2 id="usage">Usage</h2>
+<p>The usage is straightforward:</p>
+<ol>
+<li>Define a serializable task by adding <code>serde</code> derives to a task struct.</li>
+<li>Implement <code>AsyncRunnable</code> runnable trait for fang to be able to run it.</li>
+<li>Start workers.</li>
+<li>Enqueue tasks.</li>
+</ol>
+<p>Let's go over each step.</p>
+<h3 id="define-a-job">Define a job</h3>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="rust"><span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">use</span><span style="color: light-dark(#6F42C1, #B392F0);"> fang</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span style="color: light-dark(#6F42C1, #B392F0);">serde</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span>{</span><span style="color: light-dark(#6F42C1, #B392F0);">Deserialize</span><span>,</span><span style="color: light-dark(#6F42C1, #B392F0);"> Serialize</span><span>}</span><span>;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>#</span><span>[</span><span>derive</span><span>(</span><span style="color: light-dark(#6F42C1, #B392F0);">Serialize</span><span>,</span><span style="color: light-dark(#6F42C1, #B392F0);"> Deserialize</span><span>)</span><span>]</span></span>
+<span class="giallo-l"><span>#</span><span>[</span><span>serde</span><span>(</span><span style="color: light-dark(#D73A49, #F97583);">crate</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">fang::serde</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>)</span><span>]</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">pub</span><span style="color: light-dark(#D73A49, #F97583);"> struct</span><span style="color: light-dark(#6F42C1, #B392F0);"> MyTask</span><span> {</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    pub</span><span> number</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#6F42C1, #B392F0);"> u16</span><span>,</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">impl</span><span style="color: light-dark(#6F42C1, #B392F0);"> MyTask</span><span> {</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    pub</span><span style="color: light-dark(#D73A49, #F97583);"> fn</span><span style="color: light-dark(#6F42C1, #B392F0);"> new</span><span>(</span><span>number</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#6F42C1, #B392F0);"> u16</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> -&gt;</span><span style="color: light-dark(#005CC5, #79B8FF);"> Self</span><span> {</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">        Self</span><span> {</span><span> number</span><span> }</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>Fang re-exports <code>serde</code> so it's not required to add it to the <code>Cargo.toml</code> file</p>
+<h3 id="implement-the-asyncrunnable-trait">Implement the AsyncRunnable trait</h3>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="rust"><span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">use</span><span style="color: light-dark(#6F42C1, #B392F0);"> fang</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span>async_trait</span><span>;</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">use</span><span style="color: light-dark(#6F42C1, #B392F0);"> fang</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span>typetag</span><span>;</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">use</span><span style="color: light-dark(#6F42C1, #B392F0);"> fang</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span style="color: light-dark(#6F42C1, #B392F0);">AsyncRunnable</span><span>;</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">use</span><span style="color: light-dark(#6F42C1, #B392F0);"> std</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span style="color: light-dark(#6F42C1, #B392F0);">time</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span style="color: light-dark(#6F42C1, #B392F0);">Duration</span><span>;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>#</span><span>[</span><span>async_trait</span><span>]</span></span>
+<span class="giallo-l"><span>#</span><span>[</span><span>typetag</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span>serde</span><span>]</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">impl</span><span style="color: light-dark(#6F42C1, #B392F0);"> AsyncRunnable</span><span style="color: light-dark(#D73A49, #F97583);"> for</span><span style="color: light-dark(#6F42C1, #B392F0);"> MyTask</span><span> {</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    async</span><span style="color: light-dark(#D73A49, #F97583);"> fn</span><span style="color: light-dark(#6F42C1, #B392F0);"> run</span><span>(</span><span style="color: light-dark(#D73A49, #F97583);">&amp;</span><span style="color: light-dark(#005CC5, #79B8FF);">self</span><span>,</span><span> queue</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#D73A49, #F97583);"> &amp;</span><span style="color: light-dark(#D73A49, #F97583);">mut</span><span style="color: light-dark(#D73A49, #F97583);"> dyn</span><span style="color: light-dark(#6F42C1, #B392F0);"> AsyncQueueable</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> -&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> Result</span><span>&lt;</span><span>(</span><span>)</span><span>,</span><span style="color: light-dark(#6F42C1, #B392F0);"> Error</span><span>&gt;</span><span> {</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">        let</span><span> new_task</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#6F42C1, #B392F0);"> MyTask</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span style="color: light-dark(#6F42C1, #B392F0);">new</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">self</span><span style="color: light-dark(#D73A49, #F97583);">.</span><span>number </span><span style="color: light-dark(#D73A49, #F97583);">+</span><span style="color: light-dark(#005CC5, #79B8FF);"> 1</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span>        queue</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">            .</span><span style="color: light-dark(#6F42C1, #B392F0);">insert_task</span><span>(</span><span style="color: light-dark(#D73A49, #F97583);">&amp;</span><span>new_task</span><span style="color: light-dark(#D73A49, #F97583);"> as</span><span style="color: light-dark(#D73A49, #F97583);"> &amp;</span><span style="color: light-dark(#D73A49, #F97583);">dyn</span><span style="color: light-dark(#6F42C1, #B392F0);"> AsyncRunnable</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">            .</span><span style="color: light-dark(#D73A49, #F97583);">await</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">            .</span><span style="color: light-dark(#6F42C1, #B392F0);">unwrap</span><span>(</span><span>)</span><span>;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">        log</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span style="color: light-dark(#6F42C1, #B392F0);">info!</span><span>(</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">the current number is </span><span style="color: light-dark(#032F62, #9ECBFF);">{</span><span style="color: light-dark(#032F62, #9ECBFF);">}</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> self</span><span style="color: light-dark(#D73A49, #F97583);">.</span><span>number</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">        tokio</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span style="color: light-dark(#6F42C1, #B392F0);">time</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span style="color: light-dark(#6F42C1, #B392F0);">sleep</span><span>(</span><span style="color: light-dark(#6F42C1, #B392F0);">Duration</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span style="color: light-dark(#6F42C1, #B392F0);">from_secs</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">3</span><span>)</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">.</span><span style="color: light-dark(#D73A49, #F97583);">await</span><span>;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">        Ok</span><span>(</span><span>(</span><span>)</span><span>)</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"></span></code></pre>
+<ul>
+<li>Fang uses the <a rel="external" href="https://github.com/dtolnay/typetag">typetag library</a> to serialize trait objects and save them to the queue.</li>
+<li>The <a rel="external" href="https://github.com/dtolnay/async-trait">async-trait</a> is used for implementing async traits</li>
+</ul>
+<h3 id="init-queue">Init queue</h3>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="rust"><span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">use</span><span style="color: light-dark(#6F42C1, #B392F0);"> fang</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span style="color: light-dark(#6F42C1, #B392F0);">asynk</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span style="color: light-dark(#6F42C1, #B392F0);">async_queue</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span style="color: light-dark(#6F42C1, #B392F0);">AsyncQueue</span><span>;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">let</span><span> max_pool_size</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#6F42C1, #B392F0);"> u32</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#005CC5, #79B8FF);"> 2</span><span>;</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">let</span><span style="color: light-dark(#D73A49, #F97583);"> mut</span><span> queue</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#6F42C1, #B392F0);"> AsyncQueue</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span style="color: light-dark(#6F42C1, #B392F0);">builder</span><span>(</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    .</span><span style="color: light-dark(#6F42C1, #B392F0);">uri</span><span>(</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">postgres://postgres:postgres@localhost/fang</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    .</span><span style="color: light-dark(#6F42C1, #B392F0);">max_pool_size</span><span>(</span><span>max_pool_size</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    .</span><span style="color: light-dark(#6F42C1, #B392F0);">duplicated_tasks</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">true</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    .</span><span style="color: light-dark(#6F42C1, #B392F0);">build</span><span>(</span><span>)</span><span>;</span></span></code></pre><h3 id="start-workers">Start workers</h3>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="rust"><span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">use</span><span style="color: light-dark(#6F42C1, #B392F0);"> fang</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span style="color: light-dark(#6F42C1, #B392F0);">asynk</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span style="color: light-dark(#6F42C1, #B392F0);">async_worker_pool</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span style="color: light-dark(#6F42C1, #B392F0);">AsyncWorkerPool</span><span>;</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">use</span><span style="color: light-dark(#6F42C1, #B392F0);"> fang</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span style="color: light-dark(#6F42C1, #B392F0);">NoTls</span><span>;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">let</span><span style="color: light-dark(#D73A49, #F97583);"> mut</span><span> pool</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#6F42C1, #B392F0);"> AsyncWorkerPool</span><span>&lt;</span><span style="color: light-dark(#6F42C1, #B392F0);">AsyncQueue</span><span>&lt;</span><span style="color: light-dark(#6F42C1, #B392F0);">NoTls</span><span>&gt;</span><span>&gt;</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#6F42C1, #B392F0);"> AsyncWorkerPool</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span style="color: light-dark(#6F42C1, #B392F0);">builder</span><span>(</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    .</span><span style="color: light-dark(#6F42C1, #B392F0);">number_of_workers</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">10_</span><span style="color: light-dark(#6F42C1, #B392F0);">u32</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    .</span><span style="color: light-dark(#6F42C1, #B392F0);">queue</span><span>(</span><span>queue</span><span style="color: light-dark(#D73A49, #F97583);">.</span><span style="color: light-dark(#6F42C1, #B392F0);">clone</span><span>(</span><span>)</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    .</span><span style="color: light-dark(#6F42C1, #B392F0);">build</span><span>(</span><span>)</span><span>;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>pool</span><span style="color: light-dark(#D73A49, #F97583);">.</span><span style="color: light-dark(#6F42C1, #B392F0);">start</span><span>(</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">.</span><span style="color: light-dark(#D73A49, #F97583);">await</span><span>;</span></span></code></pre><h3 id="insert-tasks">Insert tasks</h3>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="rust"><span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">let</span><span> task</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#6F42C1, #B392F0);"> MyTask</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span style="color: light-dark(#6F42C1, #B392F0);">new</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">0</span><span>)</span><span>;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>queue</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    .</span><span style="color: light-dark(#6F42C1, #B392F0);">insert_task</span><span>(</span><span style="color: light-dark(#D73A49, #F97583);">&amp;</span><span>task1</span><span style="color: light-dark(#D73A49, #F97583);"> as</span><span style="color: light-dark(#D73A49, #F97583);"> &amp;</span><span style="color: light-dark(#D73A49, #F97583);">dyn</span><span style="color: light-dark(#6F42C1, #B392F0);"> AsyncRunnable</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    .</span><span style="color: light-dark(#D73A49, #F97583);">await</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    .</span><span style="color: light-dark(#6F42C1, #B392F0);">unwrap</span><span>(</span><span>)</span><span>;</span></span></code></pre><h2 id="pitfalls">Pitfalls</h2>
+<p>The async processing is suitable for lightweight tasks. But for heavier tasks it's advised to use one of the following approaches:</p>
+<ul>
+<li>start a separate tokio runtime to run fang workers</li>
+<li>use the threaded processing feature implemented in fang instead of the async processing</li>
+</ul>
+<h2 id="future-directions">Future directions</h2>
+<p>There are a couple of features planned for fang:</p>
+<ul>
+<li>Retries with different backoff modes</li>
+<li>Additional backends (in-memory, redis)</li>
+<li>Graceful shutdown for async workers (for the threaded processing this feature is implemented)</li>
+<li>Cron jobs</li>
+</ul>
+<h2 id="conclusion">Conclusion</h2>
+<p>The project is available on <a rel="external" href="https://github.com/ayrat555/fang">GitHub</a></p>
+<p>The async feature and this post is written in collaboration between <a rel="external" href="https://www.badykov.com/">Ayrat Badykov</a> (<a rel="external" href="https://github.com/ayrat555">github</a>) and <a rel="external" href="https://pxp9.github.io/">Pepe Márquez Romero</a> (<a rel="external" href="https://github.com/pxp9">github</a>)</p>
+</section>
+
+  <hr />
+
+  <!-- Post Taxonomies -->
+  
+<footer class="mt-12 flex flex-col">
+  <!---->
+  <!---->
+  <!---->
+  <!---->
+  
+  <div class="mb-2 flex flex-wrap">
+    <span class="block-bg mb-1.5 mr-1.5 rounded-lg px-5 py-1.5">Tags </span>
+    
+    <a
+      class="block-bg block-hover mb-1.5 mr-1.5 rounded-lg px-5 py-1.5 no-underline"
+      href="https://pmarquez.net/tags/rust/"
+      >rust</a
+    >
+    
+  </div>
+  
+</footer>
+
+<!---->
+
+  <!-- Post Nav -->
+  
+<nav class="block-bg mt-12 flex flex-wrap rounded-lg text-lg">
+  <!---->
+  
+  <a
+    class="block-hover-mask ml-auto flex min-w-[50%] grow items-center justify-end rounded-r-md p-6 pl-3 font-semibold no-underline"
+    href="https:&#x2F;&#x2F;pmarquez.net&#x2F;lazy-doc&#x2F;"
+    ><span>Lazy Doc, Your documentation tool has arrived.</span><span class="ml-1.5">→</span></a
+  >
+  
+</nav>
+
+<!---->
+
+  <!-- Comment -->
+  
+
+  <!-- Page End inject -->
+  
+</article>
+
+    </main>
+
+    <footer class="mx-auto flex max-w-3xl flex-wrap items-center px-8 py-4 text-sm opacity-60">
+  <div class="mr-auto basis-full lg:basis-1/2">
+    <!---->
+    <!---->
+    &copy; 2026<!---->
+    
+    <a class="link" href="https://pmarquez.net">
+      pxp9
+    </a>
+    
+  </div>
+  <div class="flex basis-full lg:basis-1/2 lg:justify-end">
+    <a class="link mr-6 lg:ml-6" href="https://www.getzola.org/" rel="noopener" target="_blank">
+      Powered by Zola
+    </a>
+  </div>
+  <!-- Footer inject -->
+  
+</footer>
+
+
+    <!-- Body End inject -->
+    
+  </body>
+</html>

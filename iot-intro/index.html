@@ -1,0 +1,808 @@
+<!doctype html>
+<html class="not-ready lg:text-base" lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+  <!-- Title -->
+  <title>
+    A gentle introduction to Elixir IoT - Software Engineer Oasis
+  </title>
+
+  <!-- Meta -->
+  <meta name="theme-color" />
+
+  
+  <!-- Author -->
+  
+  <!---->
+  
+  <!---->
+  
+  <!---->
+  
+  <!---->
+  
+  <!---->
+  <meta name="description" content="An introduction step by step " />
+  <meta name="author" content="pxp9" />
+  <!-- The Open Graph protocol -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="A gentle introduction to Elixir IoT" />
+  <meta property="og:site_name" content="Software Engineer Oasis" />
+  <meta property="og:description" content="An introduction step by step " />
+  <meta property="og:url" content="https:&#x2F;&#x2F;pmarquez.net&#x2F;iot-intro&#x2F;" />
+  
+  <!---->
+  
+  <!---->
+  
+  <!---->
+  
+  <meta property="og:image" content="https://pmarquez.net/images/2025-11-26_iot_elixir.png" />
+  
+  <!---->
+  
+
+  <!-- CSS & JS -->
+  <link rel="preload stylesheet" as="style" href="https://pmarquez.net/main.css" />
+  <style>
+    :root {
+      --bg: #f4f4f5;
+      --bg-dark: #18181b;
+      --header: #e4e4e7;
+      --header-dark: #27272a;
+    }
+  </style>
+
+  
+
+  <!-- Dark Icon -->
+  <link rel="preload" as="image" href="https://pmarquez.net/icons/theme.svg" />
+
+  <!-- Math -->
+  
+  <!---->
+
+  <!-- Mermaid -->
+  
+  <!---->
+  <script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+
+  const initMermaid = (isDark) => {
+    mermaid.initialize({
+      theme: isDark ? "dark" : "default",
+      themeVariables: {
+        fontSize: "32px"
+      },
+      startOnLoad: false
+    });
+    mermaid.run();
+  };
+
+  // Add data-mermaid-code attribute on all mermaid block.
+  document.querySelectorAll(".mermaid").forEach((element) => {
+    element.setAttribute("data-mermaid-code", element.innerHTML);
+  });
+
+  // Re-render mermaid when theme changed.
+  document.body.addEventListener("set-theme", (e) => {
+    document.querySelectorAll(".mermaid").forEach((element) => {
+      const mermaidCode = element.getAttribute("data-mermaid-code");
+      if (mermaidCode != null) {
+        element.removeAttribute("data-processed");
+        element.innerHTML = mermaidCode;
+      }
+    });
+    initMermaid(e.detail === "dark");
+  });
+
+  // The es module script will load defer, so the localStorage should already be set by script in header.
+  // If this script is loaded first, the script in header will dispatch an event to re-render mermaid, it's works too.
+  initMermaid(localStorage.getItem("dark") === "true");
+</script>
+
+  <!---->
+  
+  <!---->
+
+  <!-- Favicon -->
+  <link rel="icon" href="https://pmarquez.net/favicon.ico" />
+  <link rel="apple-touch-icon" href="https://pmarquez.net/apple-touch-icon.png" />
+
+  <!-- Feeds -->
+  
+  <!---->
+   
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title="RSS"
+    href="https://pmarquez.net/rss.xml"
+  />
+  
+  <!---->
+  
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https:&#x2F;&#x2F;pmarquez.net&#x2F;iot-intro&#x2F;" />
+
+  <!-- Head inject -->
+  
+</head>
+
+  <body class="text-black duration-200 ease-out dark:text-white">
+    <header
+  class="header fixed top-0 z-40 mx-auto min-h-[3.5rem] w-full"
+>
+  <div class="mx-auto w-full max-w-4xl p-3 lg:flex lg:justify-between">
+    <div class="flex justify-between">
+      <div class="flex items-center">
+        <a class="text-2xl font-semibold" href="https://pmarquez.net">Software Engineer Oasis</a>
+        <div
+          class="btn-dark ml-4 h-6 w-6 shrink-0 cursor-pointer text-[0] [background:url(./icons/theme.svg)_left_center/cover_no-repeat] dark:invert dark:[background-position:right]"
+          role="button"
+          aria-label="Dark"
+        ></div>
+      </div>
+      
+      <div
+        class="btn-menu relative z-50 flex h-8 w-8 shrink-0 cursor-pointer flex-col items-center justify-center gap-2.5 lg:hidden"
+        role="button"
+        aria-label="Menu"
+      ></div>
+      
+    </div>
+    <script>
+      // base
+      const htmlClass = document.documentElement.classList;
+      setTimeout(() => {
+        htmlClass.remove("not-ready");
+      }, 10);
+
+      // mobile menu
+      const btnMenu = document.querySelector(".btn-menu");
+      btnMenu?.addEventListener("click", () => {
+        htmlClass.toggle("open");
+      });
+
+      // dark theme
+      const setDark = (isDark) => {
+        if (isDark) {
+          document.body.dispatchEvent(new CustomEvent("set-theme", { detail: "dark" }));
+          htmlClass.add("dark");
+        } else {
+          document.body.dispatchEvent(new CustomEvent("set-theme", { detail: "light" }));
+          htmlClass.remove("dark");
+        }
+        localStorage.setItem("dark", isDark);
+      };
+
+      // init
+      const darkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+      if (htmlClass.contains("dark")) {
+        setDark(true);
+      } else {
+        const darkVal = localStorage.getItem("dark");
+        setDark(darkVal ? darkVal === "true" : darkScheme.matches);
+      }
+
+      // listen system
+      darkScheme.addEventListener("change", (event) => {
+        setDark(event.matches);
+      });
+
+      // manual switch
+      const btnDark = document.querySelector(".btn-dark");
+      btnDark.addEventListener("click", () => {
+        setDark(localStorage.getItem("dark") !== "true");
+      });
+    </script>
+    
+    <nav class="flex w-full items-center lg:w-auto">
+      <ul
+        class="nav-wrapper flex w-full flex-col py-2 lg:w-auto lg:flex-row lg:self-center lg:py-0"
+      >
+        
+        <li>
+          <a
+            class="primary-link block py-2 text-center text-lg font-medium lg:px-3 lg:py-0"
+            href="https://pmarquez.net/projects"
+            >Projects</a
+          >
+        </li>
+        
+        <li>
+          <a
+            class="primary-link block py-2 text-center text-lg font-medium lg:px-3 lg:py-0"
+            href="https://pmarquez.net/archive"
+            >Archive</a
+          >
+        </li>
+        
+        <li>
+          <a
+            class="primary-link block py-2 text-center text-lg font-medium lg:px-3 lg:py-0"
+            href="https://pmarquez.net/tags"
+            >Tags</a
+          >
+        </li>
+        
+        <li>
+          <a
+            class="primary-link block py-2 text-center text-lg font-medium lg:px-3 lg:py-0"
+            href="https://pmarquez.net/about"
+            >About</a
+          >
+        </li>
+        
+      </ul>
+      <!-- Header Nav inject -->
+      
+    </nav>
+    
+  </div>
+</header>
+
+
+    <!-- Body Start inject -->
+    
+
+    <main
+      class="prose prose-neutral relative mx-auto min-h-[calc(100%-9rem)] max-w-3xl break-words px-4 pb-16 pt-32 dark:prose-invert prose-pre:rounded-lg prose-img:rounded-lg"
+    >
+      
+<article>
+  <!-- Page Start inject -->
+  
+
+  <header class="mb-16">
+    <h1 class="!my-0 pb-2.5">A gentle introduction to Elixir IoT</h1>
+    <div class="text-sm antialiased opacity-60">
+  
+  <time>2025-11-26</time>
+  <span class="mx-1">&middot;</span>
+  <span>11min</span>
+  <!---->
+  <!---->
+  <!---->
+  <!---->
+  
+  <span class="mx-1">&middot;</span>
+  <span>pxp9</span>
+  
+  <!-- Page Info inject -->
+  
+</div>
+
+  </header>
+
+  <!---->
+  <figure class="mb-12 mt-0">
+    <img
+      class="h-auto w-full rounded-lg"
+      src="https://pmarquez.net/images/2025-11-26_iot_elixir.png"
+      alt="IoT Elixir"
+    />
+  </figure>
+  
+
+  <!-- TOC -->
+  <!---->
+<div class="block-bg mb-12 flex rounded-lg p-2 text-lg">
+  <details>
+    <summary class="cursor-pointer py-1 pl-4">
+      <span>Table of Contents</span>
+    </summary>
+    <div class="px-2">
+      <ul>
+        
+        <li>
+          <a class="no-underline hover:underline" href="https://pmarquez.net/iot-intro/#introduction"
+            >Introduction</a
+          >
+          
+        </li>
+        
+        <li>
+          <a class="no-underline hover:underline" href="https://pmarquez.net/iot-intro/#basic-iot-concepts"
+            >Basic IoT concepts</a
+          >
+          
+          <ul>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/iot-intro/#peripherals-or-sensors"
+                >Peripherals or Sensors.</a
+              >
+            </li>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/iot-intro/#main-differences-between-mpu-and-mcu"
+                >Main differences between MPU and MCU.</a
+              >
+            </li>
+            
+          </ul>
+          
+        </li>
+        
+        <li>
+          <a class="no-underline hover:underline" href="https://pmarquez.net/iot-intro/#why-elixir-for-iot"
+            >Why Elixir for IoT ?</a
+          >
+          
+          <ul>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/iot-intro/#reduce-the-amount-of-languages-in-your-stack"
+                >Reduce the amount of languages in your stack.</a
+              >
+            </li>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/iot-intro/#feature-rich-in-embedded-systems-which-you-cannot-imagine-or-not-even-come-close"
+                >Feature rich in embedded systems which you cannot imagine or not even come close.</a
+              >
+            </li>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/iot-intro/#vibrant-and-active-community"
+                >Vibrant and active community.</a
+              >
+            </li>
+            
+          </ul>
+          
+        </li>
+        
+        <li>
+          <a class="no-underline hover:underline" href="https://pmarquez.net/iot-intro/#nerves-project-mpus-iot-in-elixir"
+            >Nerves project. MPUs IoT in Elixir.</a
+          >
+          
+          <ul>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/iot-intro/#how-to-start-a-nerves-project"
+                >How to start a Nerves project ?</a
+              >
+            </li>
+            
+          </ul>
+          
+        </li>
+        
+        <li>
+          <a class="no-underline hover:underline" href="https://pmarquez.net/iot-intro/#atomvm-project-mcus-iot-in-elixir"
+            >AtomVM project. MCUs IoT in Elixir.</a
+          >
+          
+          <ul>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/iot-intro/#how-to-start-an-atomvm-project"
+                >How to start an AtomVM project ?</a
+              >
+            </li>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/iot-intro/#esp32"
+                >ESP32</a
+              >
+            </li>
+            
+          </ul>
+          
+        </li>
+        
+        <li>
+          <a class="no-underline hover:underline" href="https://pmarquez.net/iot-intro/#what-kind-of-stuff-i-built-with-this-tech"
+            >What kind of stuff I built with this tech ?</a
+          >
+          
+        </li>
+        
+      </ul>
+    </div>
+  </details>
+</div>
+
+<!---->
+
+  <!-- Content -->
+  <section><h2 id="introduction">Introduction</h2>
+<p>IoT (Internet of Things) has become a popular term in the society, at least
+between software and hardware enthusiasts. A lot of people want to experiment at
+least once in life how is controlling real world devices with Software. It is
+super interesting because it has many applications, cars, household appliances,
+manufacturing industry and many more.</p>
+<p>If you are reading this article, it is because you are either interested in learning embedded systems, or how
+to program your first firmware in a board in Elixir.</p>
+<h2 id="basic-iot-concepts">Basic IoT concepts</h2>
+<p>For doing IoT you will need to know that you have 2 main types of processors:</p>
+<ul>
+<li>Micro processors units (MPU) devices like Raspberry Pi family, Beagle Bone or
+Arduino UNO Q (Arduino UNO Q is an exceptional board because it has a MPU and
+MCU in the same board).</li>
+<li>Micro controllers units (MCU) devices like ESP32 family, STM32 family or
+Raspberry Pi <strong>pico</strong> family.</li>
+</ul>
+<h3 id="peripherals-or-sensors">Peripherals or Sensors.</h3>
+<p>Peripherals or Sensors are external to MPUs, therefore, you will need to implement a driver
+for this, or take one already done. Peripherals or sensors can be
+inside an MCU, but usually are outside of them, you will need a driver as well.</p>
+<p>Most driver implementations are taking one communication protocol as a standard
+like I2C, SPI or UART and giving some meaning to the messages sent. If none of
+these protocols are being used, it means that the device is controlled by raw
+signals (also called parallel interface), and you will need to read the
+datasheet of the peripheral.</p>
+<p>Every good MPU, MCU, sensor, or peripheral has an open datasheet. I would say, do
+not buy a peripheral if you cannot find easily its datasheet online.</p>
+<h3 id="main-differences-between-mpu-and-mcu">Main differences between MPU and MCU.</h3>
+<ul>
+<li><strong>Performance</strong>, MPUs are much faster than MCUs. MPUs clock for a embedded
+device can run at 2.4Ghz compared to the MCUs, which can go between 800Mhz
+(STM32V8), 240 MHz (ESP32-S3) or 16 MHz (slowest Arduino).</li>
+<li><strong>OS vs No OS or RTOS</strong>. Conventional operating systems do not have time
+guarantees when they take control in a system call, they are gonna return
+you the execution control whenever the OS scheduler wants. For time constraint applications, this is really
+important, thats why MCUs do not use OS, or they use a
+<a rel="external" href="https://en.wikipedia.org/wiki/Real-time_operating_system">RTOS</a>.</li>
+<li><strong>Power consumption</strong>. MCUs consume way less energy than MPUs, which makes them a
+perfect fit for field applications.</li>
+<li><strong>Applications</strong>. MPUs can run AI models, Complex web applications, any kind of heavy
+processing tasks. MCUs can run applications which are soft processing tasks
+and real time responses, for example, controlling the servos of one mechanical
+hardware (you do not want a conventional OS to block the execution of a robot
+for a unknown period of time).</li>
+</ul>
+<h2 id="why-elixir-for-iot">Why Elixir for IoT ?</h2>
+<h3 id="reduce-the-amount-of-languages-in-your-stack">Reduce the amount of languages in your stack.</h3>
+<p>Consider you want to do a Full system from the smallest MCU chip to Cloud.</p>
+<p>How would you do it without the Elixir way?</p>
+<ul>
+<li>You will use C , C++ or MicroPython for the MCU.</li>
+<li>You will use a small Linux distribution (Alpine or Debian based like Raspian),
+which you will have to install, the language of your preference to code in the
+MPUs and make sure that the Linux distribution has the proper drivers for the
+hardware you want to use. Make sure that the OS starts the application you
+did, via systemd unit.</li>
+<li>Make an application to run in the Cloud with any stack, Go, Python, or
+whatever language of your preference.</li>
+</ul>
+<p>Why is so hard ?</p>
+<p>In Elixir you will use:</p>
+<ul>
+<li>
+<p>AtomVM for MCUs, it ships with RTOS or not depending on the MCU chip.</p>
+</li>
+<li>
+<p>Nerves for MPUs.</p>
+</li>
+<li>
+<p>Elixir for making cloud applications.</p>
+</li>
+</ul>
+<h3 id="feature-rich-in-embedded-systems-which-you-cannot-imagine-or-not-even-come-close">Feature rich in embedded systems which you cannot imagine or not even come close.</h3>
+<ul>
+<li>
+<p>Fault tolerant. Your application can recover from a unexpected failures. This
+feature is builtin in any Erlang VM application.</p>
+</li>
+<li>
+<p>Distributed computing by construction. Erlang VM concurrency model, allows
+concurrency and distribution on any application.</p>
+</li>
+</ul>
+<h3 id="vibrant-and-active-community">Vibrant and active community.</h3>
+<p>If you are new experimenting with this stuff, you might have skill issues like me
+and you might want help from smarter or with more experienced people than you.</p>
+<p>Nerves and AtomVM core maintainers and enthusiasts developers like me are active
+in the Elixir and Erlang forums. If you have a question, you can always ask in
+those channels or in the Elixir Discord channel.</p>
+<h2 id="nerves-project-mpus-iot-in-elixir">Nerves project. MPUs IoT in Elixir.</h2>
+<p>Nerves is an Elixir project for doing embedded Linux systems. What this Embedded
+Linux framework does for you ?</p>
+<ul>
+<li>
+<p>Prebuilt Linux kernel builds (built with BuildRoot) for most popular boards,
+Nerves provides customized kernels for each board which boots the Linux
+system, starts your Erlang VM and then Erlang VM starts your application. Even
+the customized Linux kernel, setups a watchdog for tracking the Erlang VM OS
+process, so even if the Erlang VM crashes, the system is smart enough to
+restart the Erlang VM.</p>
+</li>
+<li>
+<p>Ability to customize the kernel for your board, Nerves give you the ability
+for extend the kernel that you are gonna run in the MPU, for supporting more
+hardware.</p>
+</li>
+<li>
+<p>Support most common Communication protocols in embedded systems, I2C, SPI and
+Uart (via <a rel="external" href="https://github.com/elixir-circuits">Elixir Circuits</a>), popular
+device drivers, and so on ...</p>
+</li>
+<li>
+<p>Supported Networking via <a rel="external" href="https://github.com/nerves-networking">Nerves
+Networking</a> libraries. WiFi, mDNS,
+ethernet etc...</p>
+<h3 id="how-to-start-a-nerves-project">How to start a Nerves project ?</h3>
+<p>You just need to use <a rel="external" href="https://github.com/nerves-project/nerves_bootstrap/tree/main?tab=readme-ov-file#installation">Nerves
+bootstrap</a>.
+once installed, you can run this command to create an empty nerves project
+which will create an empty Nerves project.</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">mix</span><span style="color: light-dark(#032F62, #9ECBFF);"> nerves.new</span><span style="color: light-dark(#032F62, #9ECBFF);"> my_project</span></span></code></pre></li>
+</ul>
+<p>By default, Nerves creates a project which is supported in all the boards that
+have official support, but it will not download a specific Linux build until
+<code>MIX_TARGET</code> env var is set and <code>mix deps.get</code> is executed.</p>
+<p><code>mix.exs</code> file.</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="elixir"><span class="giallo-l"><span>      {</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">nerves_system_rpi</span><span>,</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">~&gt; 1.24</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> runtime</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> false</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> targets</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> :</span><span style="color: light-dark(#005CC5, #79B8FF);">rpi</span><span>}</span><span>,</span></span>
+<span class="giallo-l"><span>      {</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">nerves_system_rpi0</span><span>,</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">~&gt; 1.24</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> runtime</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> false</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> targets</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> :</span><span style="color: light-dark(#005CC5, #79B8FF);">rpi0</span><span>}</span><span>,</span></span>
+<span class="giallo-l"><span>      {</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">nerves_system_rpi2</span><span>,</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">~&gt; 1.24</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> runtime</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> false</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> targets</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> :</span><span style="color: light-dark(#005CC5, #79B8FF);">rpi2</span><span>}</span><span>,</span></span>
+<span class="giallo-l"><span>      {</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">nerves_system_rpi3</span><span>,</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">~&gt; 1.24</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> runtime</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> false</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> targets</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> :</span><span style="color: light-dark(#005CC5, #79B8FF);">rpi3</span><span>}</span><span>,</span></span>
+<span class="giallo-l"><span>      {</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">nerves_system_rpi3a</span><span>,</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">~&gt; 1.24</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> runtime</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> false</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> targets</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> :</span><span style="color: light-dark(#005CC5, #79B8FF);">rpi3a</span><span>}</span><span>,</span></span>
+<span class="giallo-l"><span>      {</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">nerves_system_rpi4</span><span>,</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">~&gt; 1.24</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> runtime</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> false</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> targets</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> :</span><span style="color: light-dark(#005CC5, #79B8FF);">rpi4</span><span>}</span><span>,</span></span>
+<span class="giallo-l"><span>      {</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">nerves_system_rpi5</span><span>,</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">~&gt; 0.2</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> runtime</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> false</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> targets</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> :</span><span style="color: light-dark(#005CC5, #79B8FF);">rpi5</span><span>}</span><span>,</span></span>
+<span class="giallo-l"><span>      {</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">nerves_system_bbb</span><span>,</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">~&gt; 2.19</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> runtime</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> false</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> targets</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> :</span><span style="color: light-dark(#005CC5, #79B8FF);">bbb</span><span>}</span><span>,</span></span></code></pre>
+<p>you will need to specify your specific board,</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">export</span><span> MIX_TARGET</span><span style="color: light-dark(#D73A49, #F97583);">=</span><span>rpi3</span></span></code></pre>
+<p><em>Note</em>: it could be any of the supported targets, this is an example.</p>
+<p>then you will get the precompiled Linux kernel for your board.</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">mix</span><span style="color: light-dark(#032F62, #9ECBFF);"> deps.get</span></span></code></pre>
+<p>once you got all the things installed, you can start developing.</p>
+<p>the development lifecycle would be something like this.</p>
+<pre class="mermaid bg-inherit">
+  flowchart LR;
+    firmware((Initial Firmware))
+    flashed_firmware((Flashed firmware))
+    compiled_firmware((Compiled firmware))
+    f_compiled_firmware((First Compiled firmware))
+    firmware_disupdated((Code updated, but unflashed in the board))
+    firmware-- &quot;&lt;a href=https:&#x2F;&#x2F;hexdocs.pm&#x2F;nerves&#x2F;Mix.Tasks.Firmware.html&gt;mix firmware&lt;&#x2F;a&gt;&quot; --&gt;f_compiled_firmware
+    f_compiled_firmware-- &quot;&lt;a href=https:&#x2F;&#x2F;hexdocs.pm&#x2F;nerves&#x2F;Mix.Tasks.Burn.html&gt;mix burn&lt;&#x2F;a&gt;&quot; --&gt;flashed_firmware
+    flashed_firmware-- &quot;Edit firmware code&quot;--&gt;firmware_disupdated
+    firmware_disupdated--&quot;&lt;a href=https:&#x2F;&#x2F;hexdocs.pm&#x2F;nerves&#x2F;Mix.Tasks.Firmware.html&gt;mix firmware&lt;&#x2F;a&gt;&quot;--&gt;compiled_firmware
+    compiled_firmware-- &quot;&lt;a href=https:&#x2F;&#x2F;hexdocs.pm&#x2F;nerves&#x2F;Mix.Tasks.Upload.html&gt;mix upload&lt;&#x2F;a&gt;&quot;--&gt;flashed_firmware
+</pre>
+<p>The reason <code>mix burn</code> and <code>mix upload</code> are different is because one will erase
+all the partitions and the existing data in the board, and the other will just
+update the board via SSH (it is setup by default). Another reason to keep both
+tasks splitted is because Nerves supports blue-green deployments, <code>mix upload</code>
+will upload the firmware to a partition not used to boot, and it will try to
+boot in the partition where the new firmware was flashed, if the new firmware
+does not boot, it will rollback to the previous working firmware.</p>
+<p>Now you should be able to develop your own stuff, with Nerves and its ecosystem.</p>
+<h2 id="atomvm-project-mcus-iot-in-elixir">AtomVM project. MCUs IoT in Elixir.</h2>
+<p>AtomVM is an Erlang and C project which makes a different implementation of the
+Erlang VM, but works with Elixir and Erlang compilers since both compile to
+<code>BEAM</code> standard.</p>
+<p>The reason they need to implement the Erlang VM is because are more hardware
+constrained and it cannot run Linux, apart from the Real-Time needs, these
+devices require.</p>
+<p>What AtomVM does for you ?</p>
+<ul>
+<li>
+<p>Prebuilt AtomVMs images from boards contained in the releases.</p>
+</li>
+<li>
+<p>Supported most communication protocols
+<a rel="external" href="https://github.com/atomvm/AtomVM/blob/main/libs/exavmlib/lib/I2C.ex">i2c</a>,
+<a rel="external" href="https://doc.atomvm.org/latest/apidocs/erlang/eavmlib/uart.html">uart</a> and
+<a rel="external" href="https://doc.atomvm.org/latest/apidocs/erlang/eavmlib/spi.html">spi</a></p>
+</li>
+<li>
+<p>Supported Networking in their standard library <a rel="external" href="https://doc.atomvm.org/latest/api-reference-documentation.html#estdlib">AtomVM
+estdlib</a>
+libraries. WiFi, mDNS, ethernet etc...</p>
+<p><em>CAVEATS</em>: AtomVM is a quite new project and the devices might have partially
+supported features, but all of the features are available in ESP32 family.</p>
+<h3 id="how-to-start-an-atomvm-project">How to start an AtomVM project ?</h3>
+<p>Unfortunately, at the date I am writing this article, this
+<a rel="external" href="https://github.com/atomvm/exatomvm/pull/32">PR</a> has not been merged which
+will allow an automatic setup similar to Nerves bootstrap.</p>
+<p>To illustrate how the setup will be, these are the steps you will need to do.</p>
+<ol>
+<li>Create a normal <code>mix new</code> project</li>
+<li>edit your <code>mix.exs</code> file, it needs to have <code>exatomvm</code> dep and <code>atomvm</code>
+options which might differ depending on your board. Here you also define an
+starting point which is compulsory for AtomVM apps.</li>
+</ol>
+</li>
+</ul>
+<!-- end list -->
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="elixir"><span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">defmodule</span><span style="color: light-dark(#6F42C1, #B392F0);"> MyProject</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">MixProject</span><span style="color: light-dark(#D73A49, #F97583);"> do</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">use</span><span style="color: light-dark(#6F42C1, #B392F0);"> Mix</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">Project</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    def</span><span style="color: light-dark(#6F42C1, #B392F0);"> project</span><span style="color: light-dark(#D73A49, #F97583);"> do</span></span>
+<span class="giallo-l"><span>    [</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">        app</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> :</span><span style="color: light-dark(#005CC5, #79B8FF);">my_project</span><span>,</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">        version</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">0.1.0</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">        elixir</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">~&gt; 1.13</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">        start_permanent</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#6F42C1, #B392F0);"> Mix</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">env</span><span>(</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> ==</span><span style="color: light-dark(#005CC5, #79B8FF);"> :</span><span style="color: light-dark(#005CC5, #79B8FF);">prod</span><span>,</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">        deps</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#6F42C1, #B392F0);"> deps</span><span>(</span><span>)</span><span>,</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">        atomvm</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span> [</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">          start</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#6F42C1, #B392F0);"> MyProject</span><span>,</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">          ##</span><span style="color: light-dark(#6A737D, #6A737D);"> change this offset depending on your board</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">          ##</span><span style="color: light-dark(#6A737D, #6A737D);"> just an example</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">          flash_offset</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> 0x250000</span></span>
+<span class="giallo-l"><span>        ]</span></span>
+<span class="giallo-l"><span>    ]</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    end</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    def</span><span style="color: light-dark(#6F42C1, #B392F0);"> application</span><span style="color: light-dark(#D73A49, #F97583);"> do</span></span>
+<span class="giallo-l"><span>    [</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">        extra_applications</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span> [</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">logger</span><span>]</span></span>
+<span class="giallo-l"><span>    ]</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    end</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    defp</span><span style="color: light-dark(#6F42C1, #B392F0);"> deps</span><span style="color: light-dark(#D73A49, #F97583);"> do</span></span>
+<span class="giallo-l"><span>    [</span></span>
+<span class="giallo-l"><span>        {</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">exatomvm</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> git</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">https://github.com/atomvm/ExAtomVM/</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> runtime</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> false</span><span>}</span></span>
+<span class="giallo-l"><span>    ]</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    end</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">end</span></span></code></pre>
+<ol start="3">
+<li>define the <code>start</code> function in the given module.</li>
+<li>Execute <code>mix deps.get</code></li>
+<li>Search for a precompiled firmware for your board in the latest AtomVM
+release.</li>
+<li>Put the <code>.avm</code> files from the latest release in <code>avm_deps</code> folder (create it
+if not present).</li>
+<li>Flash the AtomVM itself in the board.</li>
+<li>Compile the AtomVM firmware.</li>
+<li>Flash the <code>.avm</code> file, the result of the compilation of your AtomVM firmware</li>
+</ol>
+<p>once you got all the things installed, you can start developing.</p>
+<p>the development lifecycle would be something like this.</p>
+<pre class="mermaid bg-inherit">
+  flowchart LR;
+    empty_board((Empty Board))
+    flashed_firmware((Board with AtomVM))
+    avm_file((AVM file generated))
+    firmware_disupdated((Code updated, but unflashed in the board))
+    empty_board-- &quot;Flash AtomVM&quot;--&gt;flashed_firmware
+    flashed_firmware--&quot;Edit firmware code&quot;--&gt;firmware_disupdated
+    firmware_disupdated--&quot;&lt;a href=https:&#x2F;&#x2F;github.com&#x2F;atomvm&#x2F;exatomvm&#x2F;blob&#x2F;main&#x2F;lib&#x2F;mix&#x2F;tasks&#x2F;packbeam.ex&gt;Compile AVM file&lt;&#x2F;a&gt;&quot;--&gt;avm_file
+    avm_file--&quot;Flash AVM file&quot;--&gt;flashed_firmware
+</pre>
+<p>As you can see, you just need to flash once the AtomVM itself.</p>
+<p>Note that each time, you want to flash, packbeam task is called, so the <code>.avm</code>
+is always generated just before flashing.</p>
+<h3 id="esp32">ESP32</h3>
+<p>Fortunately, for ESP32</p>
+<p>if we have the <code>exatomvm</code> dep installed since it will provide,</p>
+<ul>
+<li>
+<p>the mix task
+<a rel="external" href="https://github.com/atomvm/exatomvm/blob/main/lib/mix/tasks/esp32.install.ex">esp32.install</a>,
+which will automate steps 5,6,7</p>
+</li>
+<li>
+<p>the mix task
+<a rel="external" href="https://github.com/atomvm/exatomvm/blob/main/lib/mix/tasks/esp32_flash.ex">esp32_flash</a>,
+which will automate steps 8 and 9</p>
+</li>
+</ul>
+<p>for ESP32 the development lifecycle will look like this</p>
+<pre class="mermaid bg-inherit">
+  flowchart LR;
+    empty_board((Empty Board))
+    flashed_firmware((ESP32 with AtomVM))
+    firmware_disupdated((Code updated, but unflashed in the board))
+    empty_board-- &quot;&lt;a href=https:&#x2F;&#x2F;github.com&#x2F;atomvm&#x2F;exatomvm&#x2F;blob&#x2F;main&#x2F;lib&#x2F;mix&#x2F;tasks&#x2F;esp32.install.ex&gt;mix esp32.install&lt;&#x2F;a&gt;&quot;--&gt;flashed_firmware
+    flashed_firmware--&quot;Edit firmware code&quot;--&gt;firmware_disupdated
+    firmware_disupdated--&quot;&lt;a href=https:&#x2F;&#x2F;github.com&#x2F;atomvm&#x2F;exatomvm&#x2F;blob&#x2F;main&#x2F;lib&#x2F;mix&#x2F;tasks&#x2F;esp32_flash.ex&gt;mix esp32_flash&lt;&#x2F;a&gt;&quot;--&gt;flashed_firmware
+</pre>
+<h2 id="what-kind-of-stuff-i-built-with-this-tech">What kind of stuff I built with this tech ?</h2>
+<p>The reason I am writing this article is because I have built an LLM agent which
+controls, the hardware via prompts.</p>
+<p>The project is open source and you can check it here,
+<a rel="external" href="https://github.com/pxp9/try_nerves">github.com/pxp9/try_nerves</a></p>
+<p>What this project does is the following thing:</p>
+<ul>
+<li>You request a LLM prompt via a Telegram Bot which is running in the Nerves
+firmware.</li>
+<li>The LLMAgent implemented in the Nerves firmware, will use the sensors
+available which are registered as a tool.</li>
+<li>Each peripherial/sensor will register itself when available in the LLM agent.</li>
+<li>An Arduino board implements a green led blinking and a photoresistor,
+connected by Uart to the rasberry pi 3 where the Nerves firmware is running.</li>
+<li>An Raspberry pi pico 2W implements a RGB led, connected by Wifi to the
+raspberry pi 3.</li>
+</ul>
+<p>Then you can do stuff like this:</p>
+<p><img
+class="h-auto w-full rounded-lg"
+src="https://github.com/pxp9/pxp9.github.io/blob/main/static/images/telegram_prompt.png?raw=true"
+alt="prompt that should appear"
+/></p>
+<p>The prompt given to the system, and the result in the hardware.</p>
+<p><img
+class="h-auto w-full rounded-lg"
+src="https://github.com/pxp9/pxp9.github.io/blob/main/static/images/result_prompt.jpg?raw=true"
+alt="an image of my hardware should appear"
+/></p>
+<p>I hope you liked the article.</p>
+<p>Consider give a star to the
+<a rel="external" href="https://github.com/pxp9/try_nerves">github.com/pxp9/try_nerves</a> repo.</p>
+<p>Thank you for your attention.</p>
+</section>
+
+  <hr />
+
+  <!-- Post Taxonomies -->
+  
+<footer class="mt-12 flex flex-col">
+  <!---->
+  <!---->
+  <!---->
+  <!---->
+  
+  <div class="mb-2 flex flex-wrap">
+    <span class="block-bg mb-1.5 mr-1.5 rounded-lg px-5 py-1.5">Tags </span>
+    
+    <a
+      class="block-bg block-hover mb-1.5 mr-1.5 rounded-lg px-5 py-1.5 no-underline"
+      href="https://pmarquez.net/tags/elixir/"
+      >elixir</a
+    >
+    
+  </div>
+  
+</footer>
+
+<!---->
+
+  <!-- Post Nav -->
+  
+<nav class="block-bg mt-12 flex flex-wrap rounded-lg text-lg">
+  
+  <a
+    class="block-hover-mask flex min-w-[50%] grow items-center rounded-l-md p-6 pr-3 font-semibold no-underline"
+    href="https:&#x2F;&#x2F;pmarquez.net&#x2F;fibonacci-calculation&#x2F;"
+    ><span class="mr-1.5">←</span><span>Fibonacci calculation at peak performance</span></a
+  >
+  <!---->
+  
+</nav>
+
+<!---->
+
+  <!-- Comment -->
+  
+
+  <!-- Page End inject -->
+  
+</article>
+
+    </main>
+
+    <footer class="mx-auto flex max-w-3xl flex-wrap items-center px-8 py-4 text-sm opacity-60">
+  <div class="mr-auto basis-full lg:basis-1/2">
+    <!---->
+    <!---->
+    &copy; 2026<!---->
+    
+    <a class="link" href="https://pmarquez.net">
+      pxp9
+    </a>
+    
+  </div>
+  <div class="flex basis-full lg:basis-1/2 lg:justify-end">
+    <a class="link mr-6 lg:ml-6" href="https://www.getzola.org/" rel="noopener" target="_blank">
+      Powered by Zola
+    </a>
+  </div>
+  <!-- Footer inject -->
+  
+</footer>
+
+
+    <!-- Body End inject -->
+    
+  </body>
+</html>

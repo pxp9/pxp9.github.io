@@ -1,0 +1,1017 @@
+<!doctype html>
+<html class="not-ready lg:text-base" lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+  <!-- Title -->
+  <title>
+    Fibonacci calculation at peak performance - Software Engineer Oasis
+  </title>
+
+  <!-- Meta -->
+  <meta name="theme-color" />
+
+  
+  <!-- Author -->
+  
+  <!---->
+  
+  <!---->
+  
+  <!---->
+  
+  <!---->
+  
+  <!---->
+  <meta name="description" content="A fast way to calculate Fibonacci Nth term" />
+  <meta name="author" content="pxp9" />
+  <!-- The Open Graph protocol -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Fibonacci calculation at peak performance" />
+  <meta property="og:site_name" content="Software Engineer Oasis" />
+  <meta property="og:description" content="A fast way to calculate Fibonacci Nth term" />
+  <meta property="og:url" content="https:&#x2F;&#x2F;pmarquez.net&#x2F;fibonacci-calculation&#x2F;" />
+  
+  <!---->
+  
+  <!---->
+  
+  <!---->
+  
+  <meta property="og:image" content="https://pmarquez.net/images/2025-09-20_fibonacci_speed.png" />
+  
+  <!---->
+  
+
+  <!-- CSS & JS -->
+  <link rel="preload stylesheet" as="style" href="https://pmarquez.net/main.css" />
+  <style>
+    :root {
+      --bg: #f4f4f5;
+      --bg-dark: #18181b;
+      --header: #e4e4e7;
+      --header-dark: #27272a;
+    }
+  </style>
+
+  
+
+  <!-- Dark Icon -->
+  <link rel="preload" as="image" href="https://pmarquez.net/icons/theme.svg" />
+
+  <!-- Math -->
+  
+  <!---->
+  <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.css"
+  crossorigin="anonymous"
+/>
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.js"
+  crossorigin="anonymous"
+></script>
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.16/dist/contrib/auto-render.min.js"
+  crossorigin="anonymous"
+></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () =>
+    renderMathInElement(document.body, {
+      // customised options
+      // • auto-render specific keys, e.g.:
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false },
+      ],
+      // • rendering keys, e.g.:
+      throwOnError: false,
+    }),
+  );
+</script>
+
+  <!---->
+  
+  <!---->
+
+  <!-- Mermaid -->
+  
+  <!---->
+  <script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+
+  const initMermaid = (isDark) => {
+    mermaid.initialize({
+      theme: isDark ? "dark" : "default",
+      themeVariables: {
+        fontSize: "32px"
+      },
+      startOnLoad: false
+    });
+    mermaid.run();
+  };
+
+  // Add data-mermaid-code attribute on all mermaid block.
+  document.querySelectorAll(".mermaid").forEach((element) => {
+    element.setAttribute("data-mermaid-code", element.innerHTML);
+  });
+
+  // Re-render mermaid when theme changed.
+  document.body.addEventListener("set-theme", (e) => {
+    document.querySelectorAll(".mermaid").forEach((element) => {
+      const mermaidCode = element.getAttribute("data-mermaid-code");
+      if (mermaidCode != null) {
+        element.removeAttribute("data-processed");
+        element.innerHTML = mermaidCode;
+      }
+    });
+    initMermaid(e.detail === "dark");
+  });
+
+  // The es module script will load defer, so the localStorage should already be set by script in header.
+  // If this script is loaded first, the script in header will dispatch an event to re-render mermaid, it's works too.
+  initMermaid(localStorage.getItem("dark") === "true");
+</script>
+
+  <!---->
+  
+  <!---->
+
+  <!-- Favicon -->
+  <link rel="icon" href="https://pmarquez.net/favicon.ico" />
+  <link rel="apple-touch-icon" href="https://pmarquez.net/apple-touch-icon.png" />
+
+  <!-- Feeds -->
+  
+  <!---->
+   
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title="RSS"
+    href="https://pmarquez.net/rss.xml"
+  />
+  
+  <!---->
+  
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https:&#x2F;&#x2F;pmarquez.net&#x2F;fibonacci-calculation&#x2F;" />
+
+  <!-- Head inject -->
+  
+</head>
+
+  <body class="text-black duration-200 ease-out dark:text-white">
+    <header
+  class="header fixed top-0 z-40 mx-auto min-h-[3.5rem] w-full"
+>
+  <div class="mx-auto w-full max-w-4xl p-3 lg:flex lg:justify-between">
+    <div class="flex justify-between">
+      <div class="flex items-center">
+        <a class="text-2xl font-semibold" href="https://pmarquez.net">Software Engineer Oasis</a>
+        <div
+          class="btn-dark ml-4 h-6 w-6 shrink-0 cursor-pointer text-[0] [background:url(./icons/theme.svg)_left_center/cover_no-repeat] dark:invert dark:[background-position:right]"
+          role="button"
+          aria-label="Dark"
+        ></div>
+      </div>
+      
+      <div
+        class="btn-menu relative z-50 flex h-8 w-8 shrink-0 cursor-pointer flex-col items-center justify-center gap-2.5 lg:hidden"
+        role="button"
+        aria-label="Menu"
+      ></div>
+      
+    </div>
+    <script>
+      // base
+      const htmlClass = document.documentElement.classList;
+      setTimeout(() => {
+        htmlClass.remove("not-ready");
+      }, 10);
+
+      // mobile menu
+      const btnMenu = document.querySelector(".btn-menu");
+      btnMenu?.addEventListener("click", () => {
+        htmlClass.toggle("open");
+      });
+
+      // dark theme
+      const setDark = (isDark) => {
+        if (isDark) {
+          document.body.dispatchEvent(new CustomEvent("set-theme", { detail: "dark" }));
+          htmlClass.add("dark");
+        } else {
+          document.body.dispatchEvent(new CustomEvent("set-theme", { detail: "light" }));
+          htmlClass.remove("dark");
+        }
+        localStorage.setItem("dark", isDark);
+      };
+
+      // init
+      const darkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+      if (htmlClass.contains("dark")) {
+        setDark(true);
+      } else {
+        const darkVal = localStorage.getItem("dark");
+        setDark(darkVal ? darkVal === "true" : darkScheme.matches);
+      }
+
+      // listen system
+      darkScheme.addEventListener("change", (event) => {
+        setDark(event.matches);
+      });
+
+      // manual switch
+      const btnDark = document.querySelector(".btn-dark");
+      btnDark.addEventListener("click", () => {
+        setDark(localStorage.getItem("dark") !== "true");
+      });
+    </script>
+    
+    <nav class="flex w-full items-center lg:w-auto">
+      <ul
+        class="nav-wrapper flex w-full flex-col py-2 lg:w-auto lg:flex-row lg:self-center lg:py-0"
+      >
+        
+        <li>
+          <a
+            class="primary-link block py-2 text-center text-lg font-medium lg:px-3 lg:py-0"
+            href="https://pmarquez.net/projects"
+            >Projects</a
+          >
+        </li>
+        
+        <li>
+          <a
+            class="primary-link block py-2 text-center text-lg font-medium lg:px-3 lg:py-0"
+            href="https://pmarquez.net/archive"
+            >Archive</a
+          >
+        </li>
+        
+        <li>
+          <a
+            class="primary-link block py-2 text-center text-lg font-medium lg:px-3 lg:py-0"
+            href="https://pmarquez.net/tags"
+            >Tags</a
+          >
+        </li>
+        
+        <li>
+          <a
+            class="primary-link block py-2 text-center text-lg font-medium lg:px-3 lg:py-0"
+            href="https://pmarquez.net/about"
+            >About</a
+          >
+        </li>
+        
+      </ul>
+      <!-- Header Nav inject -->
+      
+    </nav>
+    
+  </div>
+</header>
+
+
+    <!-- Body Start inject -->
+    
+
+    <main
+      class="prose prose-neutral relative mx-auto min-h-[calc(100%-9rem)] max-w-3xl break-words px-4 pb-16 pt-32 dark:prose-invert prose-pre:rounded-lg prose-img:rounded-lg"
+    >
+      
+<article>
+  <!-- Page Start inject -->
+  
+
+  <header class="mb-16">
+    <h1 class="!my-0 pb-2.5">Fibonacci calculation at peak performance</h1>
+    <div class="text-sm antialiased opacity-60">
+  
+  <time>2025-09-20</time>
+  <span class="mx-1">&middot;</span>
+  <span>10min</span>
+  <!---->
+  <!---->
+  <!---->
+  <!---->
+  
+  <span class="mx-1">&middot;</span>
+  <span>pxp9</span>
+  
+  <!-- Page Info inject -->
+  
+</div>
+
+  </header>
+
+  <!---->
+  <figure class="mb-12 mt-0">
+    <img
+      class="h-auto w-full rounded-lg"
+      src="https://pmarquez.net/images/2025-09-20_fibonacci_speed.png"
+      alt="A Markdown logo"
+    />
+  </figure>
+  
+
+  <!-- TOC -->
+  <!---->
+<div class="block-bg mb-12 flex rounded-lg p-2 text-lg">
+  <details>
+    <summary class="cursor-pointer py-1 pl-4">
+      <span>Table of Contents</span>
+    </summary>
+    <div class="px-2">
+      <ul>
+        
+        <li>
+          <a class="no-underline hover:underline" href="https://pmarquez.net/fibonacci-calculation/#idea"
+            >Idea</a
+          >
+          
+          <ul>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/fibonacci-calculation/#start-with-the-math"
+                >Start with the Math !</a
+              >
+            </li>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/fibonacci-calculation/#math-is-not-real-life"
+                >Math is not real life.</a
+              >
+            </li>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/fibonacci-calculation/#improving-naive-solution"
+                >Improving naive solution.</a
+              >
+            </li>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/fibonacci-calculation/#sometimes-improving-is-not-enough"
+                >Sometimes improving is not enough.</a
+              >
+            </li>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/fibonacci-calculation/#what-about-another-math-approach"
+                >What about another math approach ?</a
+              >
+            </li>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/fibonacci-calculation/#the-end"
+                >The end ?</a
+              >
+            </li>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/fibonacci-calculation/#wait-something-weird-is-happening"
+                >Wait something weird is happening</a
+              >
+            </li>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/fibonacci-calculation/#theory-pretty-cool-but-show-me-the-numbers"
+                >Theory pretty cool, but show me the numbers.</a
+              >
+            </li>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/fibonacci-calculation/#conclusion"
+                >Conclusion</a
+              >
+            </li>
+            
+          </ul>
+          
+        </li>
+        
+      </ul>
+    </div>
+  </details>
+</div>
+
+<!---->
+
+  <!-- Content -->
+  <section><h2 id="idea">Idea</h2>
+<p>The idea of this article is to explore the Fibonacci sequence algorithms in
+Elixir, explore optimizations which can be done and explore how native code can
+help us in order to compute even faster. The main objective of the article is to
+compute the largest Fibonacci number as fast as possible.</p>
+<h3 id="start-with-the-math">Start with the Math !</h3>
+<p>Most powerful algorithms out there rely on a quite simple math principle.</p>
+<p>$$ Fn = F_{n-1} + F_{n-2} $$</p>
+<p>This principle means that if you know the 2 previous terms of the series you can
+compute the next one. So the Fibonacci series is recursive because in the
+definition of the series appears the series itself.</p>
+<h3 id="math-is-not-real-life">Math is not real life.</h3>
+<p>Based on the math we have seen before we can think this algorithm:</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="elixir"><span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  def</span><span style="color: light-dark(#6F42C1, #B392F0);"> fib</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">0</span><span>)</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> do:</span><span style="color: light-dark(#005CC5, #79B8FF);"> 0</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  def</span><span style="color: light-dark(#6F42C1, #B392F0);"> fib</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">1</span><span>)</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> do:</span><span style="color: light-dark(#005CC5, #79B8FF);"> 1</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  def</span><span style="color: light-dark(#6F42C1, #B392F0);"> fib</span><span>(</span><span>n</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> do</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">    fib</span><span>(</span><span>n </span><span style="color: light-dark(#D73A49, #F97583);">-</span><span style="color: light-dark(#005CC5, #79B8FF);"> 1</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> +</span><span style="color: light-dark(#6F42C1, #B392F0);"> fib</span><span>(</span><span>n </span><span style="color: light-dark(#D73A49, #F97583);">-</span><span style="color: light-dark(#005CC5, #79B8FF);"> 2</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  end</span></span></code></pre>
+<p>Let me tell you why this is a terrible idea. This algorithm is super slow,
+because it does extra computations which are already computed and it does not store
+any result.</p>
+<pre class="mermaid bg-inherit">
+  flowchart TB;
+    root[&quot;$$F_{n}$$&quot;]
+    f1[&quot;$$F_{n-1}$$&quot;]
+    f2[&quot;$$F_{n-2}$$&quot;]
+    f11[&quot;$$F_{n-2}$$&quot;]
+    f12[&quot;$$F_{n-3}$$&quot;]
+    f21[&quot;$$F_{n-3}$$&quot;]
+    f22[&quot;$$F_{n-4}$$&quot;]
+    root--&gt;f1;
+    root--&gt;f2;
+    f1--&gt;f11;
+    f1--&gt;f12;
+    f2--&gt;f21;
+    f2--&gt;f22;
+</pre>
+<p>As you can see from this example, the complexity of this algorithm grows exponentially $O(2^n)$.
+Notice that we are doing multiple times the same computation $F_{n-2}$ or $F_{n-3}$.</p>
+<h3 id="improving-naive-solution">Improving naive solution.</h3>
+<p>One improvement we can do to the solution is to apply <a rel="external" href="https://en.wikipedia.org/wiki/Dynamic_programming">Dynamic
+programming</a>. We can optimize
+the algorithm by doing memoization, so the complexity can be reduced a lot.</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="elixir"><span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  def</span><span style="color: light-dark(#6F42C1, #B392F0);"> fib</span><span>(</span><span>n</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> do</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    if</span><span style="color: light-dark(#005CC5, #79B8FF);"> :ets</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">whereis</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">fibs</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> ==</span><span style="color: light-dark(#005CC5, #79B8FF);"> :</span><span style="color: light-dark(#005CC5, #79B8FF);">undefined</span><span style="color: light-dark(#D73A49, #F97583);"> do</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">      :ets</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">new</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">fibs</span><span>,</span><span> [</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">named_table</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> read_concurrency</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> true</span><span>]</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    end</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">    do_fib</span><span>(</span><span>n</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  end</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  defp</span><span style="color: light-dark(#6F42C1, #B392F0);"> do_fib</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">0</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> do</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">    :ets</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">insert</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">fibs</span><span>,</span><span> {</span><span style="color: light-dark(#005CC5, #79B8FF);">0</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> 0</span><span>}</span><span>)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">    0</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  end</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  defp</span><span style="color: light-dark(#6F42C1, #B392F0);"> do_fib</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">1</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> do</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">    :ets</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">insert</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">fibs</span><span>,</span><span> {</span><span style="color: light-dark(#005CC5, #79B8FF);">1</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> 1</span><span>}</span><span>)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">    1</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  end</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  defp</span><span style="color: light-dark(#6F42C1, #B392F0);"> do_fib</span><span>(</span><span>n</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> do</span></span>
+<span class="giallo-l"><span>    result </span><span style="color: light-dark(#D73A49, #F97583);">=</span><span style="color: light-dark(#005CC5, #79B8FF);"> :ets</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">lookup</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">fibs</span><span>,</span><span> n</span><span>)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    if</span><span> result </span><span style="color: light-dark(#D73A49, #F97583);">==</span><span> [</span><span>]</span><span style="color: light-dark(#D73A49, #F97583);"> do</span></span>
+<span class="giallo-l"><span>      val </span><span style="color: light-dark(#D73A49, #F97583);">=</span><span style="color: light-dark(#6F42C1, #B392F0);"> do_fib</span><span>(</span><span>n </span><span style="color: light-dark(#D73A49, #F97583);">-</span><span style="color: light-dark(#005CC5, #79B8FF);"> 1</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> +</span><span style="color: light-dark(#6F42C1, #B392F0);"> do_fib</span><span>(</span><span>n </span><span style="color: light-dark(#D73A49, #F97583);">-</span><span style="color: light-dark(#005CC5, #79B8FF);"> 2</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">      :ets</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">insert</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">fibs</span><span>,</span><span> {</span><span>n</span><span>,</span><span> val</span><span>}</span><span>)</span></span>
+<span class="giallo-l"><span>      val</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    else</span></span>
+<span class="giallo-l"><span>      [</span><span>{</span><span>_n</span><span>,</span><span> val</span><span>}</span><span>]</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> result</span></span>
+<span class="giallo-l"><span>      val</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    end</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  end</span></span>
+<span class="giallo-l"></span></code></pre>
+<p>This is the same algorithm as before, but we cache the results in an <a rel="external" href="https://hexdocs.pm/elixir/main/ets.html">ETS
+table</a>, so if we have an already
+computed result, we do not need to recompute it all.</p>
+<p>We can do a simple benchmark between this implementation with memoization and
+the other one with not, so it demonstrates how powerful is this technique.</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="plain"><span class="giallo-l"><span>##### With input 1 #####</span></span>
+<span class="giallo-l"><span>Name                                        ips        average  deviation         median         99th %</span></span>
+<span class="giallo-l"><span>Elixir O(2^n) Algorithm                 16.64 M       60.09 ns ±42065.44%          45 ns          69 ns</span></span>
+<span class="giallo-l"><span>Elixir O(2^n) Algorithm Memo             1.16 M      864.46 ns  ±5353.57%         792 ns        1150 ns</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Comparison:</span></span>
+<span class="giallo-l"><span>Elixir O(2^n) Algorithm                 16.64 M</span></span>
+<span class="giallo-l"><span>Elixir O(2^n) Algorithm Memo             1.16 M - 14.39x slower +804.37 ns</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>##### With input 20 #####</span></span>
+<span class="giallo-l"><span>Name                                        ips        average  deviation         median         99th %</span></span>
+<span class="giallo-l"><span>Elixir O(2^n) Algorithm Memo             1.51 M        0.66 μs  ±9240.96%        0.54 μs        0.88 μs</span></span>
+<span class="giallo-l"><span>Elixir O(2^n) Algorithm                0.0102 M       98.09 μs    ±55.81%       96.94 μs      105.33 μs</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Comparison:</span></span>
+<span class="giallo-l"><span>Elixir O(2^n) Algorithm Memo             1.51 M</span></span>
+<span class="giallo-l"><span>Elixir O(2^n) Algorithm                0.0102 M - 148.28x slower +97.43 μs</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>##### With input 45 #####</span></span>
+<span class="giallo-l"><span>Name                                        ips        average  deviation         median         99th %</span></span>
+<span class="giallo-l"><span>Elixir O(2^n) Algorithm Memo             1.48 M      0.00000 s  ±8725.95%      0.00000 s      0.00000 s</span></span>
+<span class="giallo-l"><span>Elixir O(2^n) Algorithm               0.00000 M        16.21 s     ±0.13%        16.21 s        16.22 s</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Comparison:</span></span>
+<span class="giallo-l"><span>Elixir O(2^n) Algorithm Memo             1.48 M</span></span>
+<span class="giallo-l"><span>Elixir O(2^n) Algorithm               0.00000 M - 24065479.81x slower +16.21 s</span></span></code></pre><pre class="mermaid bg-inherit">
+  ---
+config:
+  themeVariables:
+    xyChart:
+      plotColorPalette: &#x27;#D278AA, #7C6D91&#x27;
+---
+xychart
+    title &quot;Benchmark Memo vs No Memo&quot;
+    x-axis &quot;Algorithm&quot; [ &quot;O(2^N) input 45&quot;, &quot;Memo input 45&quot;, &quot;O(2^N) input 20&quot;, &quot;Memo input 20&quot; ]
+    y-axis &quot;Time in microseconds&quot; 1 --&gt; 200
+    bar [1622000, -1000000, 105.33, -1000000 ]
+    bar [-1000000, 1.150, -1000000, 0.88]
+</pre>
+<p>For each input we flush the memoization cache, because it will be unfair if we
+leave it, since it will not compute every N at least once.</p>
+<h3 id="sometimes-improving-is-not-enough">Sometimes improving is not enough.</h3>
+<p>Dynamic programming implementation is pretty fast, but it is not enough. We can
+get a better implementation if we rethink the naive approach to make it
+$O(n)$.</p>
+<p>One trick we can do is to store the previous 2 numbers as parameters of the recursion so this way, we dont need to compute all the other results each time.</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="elixir"><span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  def</span><span style="color: light-dark(#6F42C1, #B392F0);"> fib</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">0</span><span>)</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> do:</span><span style="color: light-dark(#005CC5, #79B8FF);"> 0</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  def</span><span style="color: light-dark(#6F42C1, #B392F0);"> fib</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">1</span><span>)</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> do:</span><span style="color: light-dark(#005CC5, #79B8FF);"> 1</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  def</span><span style="color: light-dark(#6F42C1, #B392F0);"> fib</span><span>(</span><span>n</span><span>)</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> do:</span><span style="color: light-dark(#6F42C1, #B392F0);"> fib</span><span>(</span><span>n</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> 0</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> 1</span><span>)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  defp</span><span style="color: light-dark(#6F42C1, #B392F0);"> fib</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">1</span><span>,</span><span> _a</span><span>,</span><span> b</span><span>)</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> do:</span><span> b</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  defp</span><span style="color: light-dark(#6F42C1, #B392F0);"> fib</span><span>(</span><span>n</span><span>,</span><span> a</span><span>,</span><span> b</span><span>)</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> do:</span><span style="color: light-dark(#6F42C1, #B392F0);"> fib</span><span>(</span><span>n </span><span style="color: light-dark(#D73A49, #F97583);">-</span><span style="color: light-dark(#005CC5, #79B8FF);"> 1</span><span>,</span><span> b</span><span>,</span><span> a </span><span style="color: light-dark(#D73A49, #F97583);">+</span><span> b</span><span>)</span></span></code></pre>
+<p>This implementation still uses the same mathematical principle, but it does less iterations, and it uses way more less storage since it just needs to store the 2 previous fibonacci numbers.</p>
+<pre class="mermaid bg-inherit">
+  flowchart LR;
+    root[&quot;$$F_{n}$$&quot;]
+    f1[&quot;$$F_{n-1}$$&quot;]
+    f2[&quot;$$F_{n-2}$$&quot;]
+    f0[&quot;$$F_{0}$$&quot;]
+    f01[&quot;$$F_{1}$$&quot;]
+    root--&gt;f1;
+    f1--&gt;f2;
+    f2--&gt;f01;
+    f01--&gt;f0;
+</pre>
+<h3 id="what-about-another-math-approach">What about another math approach ?</h3>
+<p>There is another mathematical formula called <a rel="external" href="https://en.wikipedia.org/wiki/Fibonacci_sequence#Closed-form_expression">Binet's formula</a>.</p>
+<p>$$ Fn = \frac{\phi^{n} - (-\phi^{-n})} {\sqrt{5}} $$</p>
+<p>This principle allow us to calculate any number of the sequence by just knowing
+the value of $\phi$ constant.</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="elixir"><span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  def</span><span style="color: light-dark(#6F42C1, #B392F0);"> phi_formula</span><span>(</span><span>n</span><span>)</span><span>,</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">    do:</span><span style="color: light-dark(#6F42C1, #B392F0);"> round</span><span>(</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">:math</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">pow</span><span>(</span><span>@</span><span>phi</span><span>,</span><span> n</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> -</span><span style="color: light-dark(#005CC5, #79B8FF);"> :math</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">pow</span><span>(</span><span style="color: light-dark(#D73A49, #F97583);">-</span><span>@</span><span>phi</span><span>,</span><span style="color: light-dark(#D73A49, #F97583);"> -</span><span>n</span><span>)</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> *</span><span style="color: light-dark(#6F42C1, #B392F0);"> fast_inverse_square_root</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">5.0</span><span>)</span><span>)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  defp</span><span style="color: light-dark(#6F42C1, #B392F0);"> fast_inverse_square_root</span><span>(</span><span>number</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> do</span></span>
+<span class="giallo-l"><span>    x2 </span><span style="color: light-dark(#D73A49, #F97583);">=</span><span> number </span><span style="color: light-dark(#D73A49, #F97583);">*</span><span style="color: light-dark(#005CC5, #79B8FF);"> 0.5</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    &lt;</span><span style="color: light-dark(#D73A49, #F97583);">&lt;</span><span>i</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span>integer</span><span style="color: light-dark(#D73A49, #F97583);">-</span><span style="color: light-dark(#6F42C1, #B392F0);">size</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">64</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#D73A49, #F97583);"> &lt;</span><span style="color: light-dark(#D73A49, #F97583);">&lt;</span><span>number</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span>float</span><span style="color: light-dark(#D73A49, #F97583);">-</span><span style="color: light-dark(#6F42C1, #B392F0);">size</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">64</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    &lt;</span><span style="color: light-dark(#D73A49, #F97583);">&lt;</span><span>y</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span>float</span><span style="color: light-dark(#D73A49, #F97583);">-</span><span style="color: light-dark(#6F42C1, #B392F0);">size</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">64</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#D73A49, #F97583);"> &lt;</span><span style="color: light-dark(#D73A49, #F97583);">&lt;</span><span style="color: light-dark(#005CC5, #79B8FF);">0x5FE6EB50C7B537A9</span><span style="color: light-dark(#D73A49, #F97583);"> -</span><span> (</span><span>i </span><span style="color: light-dark(#D73A49, #F97583);">&gt;&gt;&gt;</span><span style="color: light-dark(#005CC5, #79B8FF);"> 1</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span>integer</span><span style="color: light-dark(#D73A49, #F97583);">-</span><span style="color: light-dark(#6F42C1, #B392F0);">size</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">64</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span></span>
+<span class="giallo-l"><span>    y </span><span style="color: light-dark(#D73A49, #F97583);">=</span><span> y </span><span style="color: light-dark(#D73A49, #F97583);">*</span><span> (</span><span style="color: light-dark(#005CC5, #79B8FF);">1.5</span><span style="color: light-dark(#D73A49, #F97583);"> -</span><span> x2 </span><span style="color: light-dark(#D73A49, #F97583);">*</span><span> y </span><span style="color: light-dark(#D73A49, #F97583);">*</span><span> y</span><span>)</span></span>
+<span class="giallo-l"><span>    y </span><span style="color: light-dark(#D73A49, #F97583);">=</span><span> y </span><span style="color: light-dark(#D73A49, #F97583);">*</span><span> (</span><span style="color: light-dark(#005CC5, #79B8FF);">1.5</span><span style="color: light-dark(#D73A49, #F97583);"> -</span><span> x2 </span><span style="color: light-dark(#D73A49, #F97583);">*</span><span> y </span><span style="color: light-dark(#D73A49, #F97583);">*</span><span> y</span><span>)</span></span>
+<span class="giallo-l"><span>    y </span><span style="color: light-dark(#D73A49, #F97583);">=</span><span> y </span><span style="color: light-dark(#D73A49, #F97583);">*</span><span> (</span><span style="color: light-dark(#005CC5, #79B8FF);">1.5</span><span style="color: light-dark(#D73A49, #F97583);"> -</span><span> x2 </span><span style="color: light-dark(#D73A49, #F97583);">*</span><span> y </span><span style="color: light-dark(#D73A49, #F97583);">*</span><span> y</span><span>)</span></span>
+<span class="giallo-l"><span>    y</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  end</span></span>
+<span class="giallo-l"></span></code></pre>
+<p>This implementation is in fact $O(1)$ or $O(log n)$, depends on the complexity of <code>:math.pow</code> function. What is the tradeoff ? This implementation is an approximation so you will be stacking error. Notice that one divided the square root of 5 is calculated with the <a rel="external" href="https://www.youtube.com/watch?v=p8u_k2LIZyo&amp;pp=ygUgcXVha2UgMyBmYXN0IGludmVyc2Ugc3F1YXJlIHJvb3Q%3D">quake 3 algorithm</a>, another alternative would be to hardcode this constant in the algorithm.</p>
+<h3 id="the-end">The end ?</h3>
+<p>So... Is this the end ?</p>
+<p>NO, because you should know that Elixir runs in the Erlang VM which probably has some overhead
+while calculating. We can try to make an Erlang <code>NIF</code> (<strong>Native Implementation Function</strong>), to see if it is faster than just standard Elixir.</p>
+<p>To do so, we can take a look to <code>rustler</code>, which is fantastic <code>crate</code>/elixir library.</p>
+<p>This is the code we will be using in Rust,</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="rust"><span class="giallo-l"><span>#</span><span>[</span><span>rustler</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span>nif</span><span>]</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">fn</span><span style="color: light-dark(#6F42C1, #B392F0);"> fib</span><span>(</span><span>n</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#6F42C1, #B392F0);"> u128</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> -&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> u128</span><span> {</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    let</span><span style="color: light-dark(#D73A49, #F97583);"> mut</span><span> a</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#005CC5, #79B8FF);"> 0</span><span>;</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    let</span><span style="color: light-dark(#D73A49, #F97583);"> mut</span><span> b</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#005CC5, #79B8FF);"> 1</span><span>;</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    let</span><span style="color: light-dark(#D73A49, #F97583);"> mut</span><span> i</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#005CC5, #79B8FF);"> 1</span><span>;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    while</span><span> i</span><span style="color: light-dark(#D73A49, #F97583);"> &lt;</span><span> n</span><span> {</span></span>
+<span class="giallo-l"><span>        b</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> a</span><span style="color: light-dark(#D73A49, #F97583);"> +</span><span> b</span><span>;</span></span>
+<span class="giallo-l"><span>        a</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> b</span><span style="color: light-dark(#D73A49, #F97583);"> -</span><span> a</span><span>;</span></span>
+<span class="giallo-l"><span>        i</span><span style="color: light-dark(#D73A49, #F97583);"> +=</span><span style="color: light-dark(#005CC5, #79B8FF);"> 1</span><span>;</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    b</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>and for the $\phi$ based algorithm,</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="rust"><span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">const</span><span style="color: light-dark(#005CC5, #79B8FF);"> PHI</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#6F42C1, #B392F0);"> f64</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#005CC5, #79B8FF);"> 1</span><span style="color: light-dark(#005CC5, #79B8FF);">.</span><span style="color: light-dark(#005CC5, #79B8FF);">618033988749895</span><span>;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">fn</span><span style="color: light-dark(#6F42C1, #B392F0);"> inv_sqrt</span><span>(</span><span>x</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#6F42C1, #B392F0);"> f64</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> -&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> f64</span><span> {</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    let</span><span> i</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> x</span><span style="color: light-dark(#D73A49, #F97583);">.</span><span style="color: light-dark(#6F42C1, #B392F0);">to_bits</span><span>(</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    let</span><span> x2</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> x</span><span style="color: light-dark(#D73A49, #F97583);"> *</span><span style="color: light-dark(#005CC5, #79B8FF);"> 0</span><span style="color: light-dark(#005CC5, #79B8FF);">.</span><span style="color: light-dark(#005CC5, #79B8FF);">5</span><span>;</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    let</span><span style="color: light-dark(#D73A49, #F97583);"> mut</span><span> y</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#6F42C1, #B392F0);"> f64</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span style="color: light-dark(#6F42C1, #B392F0);">from_bits</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">0x5FE6EB50C7B537A9</span><span style="color: light-dark(#D73A49, #F97583);"> -</span><span> (</span><span>i</span><span style="color: light-dark(#D73A49, #F97583);"> &gt;&gt;</span><span style="color: light-dark(#005CC5, #79B8FF);"> 1</span><span>)</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span>    y</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> y</span><span style="color: light-dark(#D73A49, #F97583);"> *</span><span> (</span><span style="color: light-dark(#005CC5, #79B8FF);">1</span><span style="color: light-dark(#005CC5, #79B8FF);">.</span><span style="color: light-dark(#005CC5, #79B8FF);">5</span><span style="color: light-dark(#D73A49, #F97583);"> -</span><span> x2</span><span style="color: light-dark(#D73A49, #F97583);"> *</span><span> y</span><span style="color: light-dark(#D73A49, #F97583);"> *</span><span> y</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span>    y</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> y</span><span style="color: light-dark(#D73A49, #F97583);"> *</span><span> (</span><span style="color: light-dark(#005CC5, #79B8FF);">1</span><span style="color: light-dark(#005CC5, #79B8FF);">.</span><span style="color: light-dark(#005CC5, #79B8FF);">5</span><span style="color: light-dark(#D73A49, #F97583);"> -</span><span> x2</span><span style="color: light-dark(#D73A49, #F97583);"> *</span><span> y</span><span style="color: light-dark(#D73A49, #F97583);"> *</span><span> y</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span>    y</span><span style="color: light-dark(#D73A49, #F97583);"> *</span><span> (</span><span style="color: light-dark(#005CC5, #79B8FF);">1</span><span style="color: light-dark(#005CC5, #79B8FF);">.</span><span style="color: light-dark(#005CC5, #79B8FF);">5</span><span style="color: light-dark(#D73A49, #F97583);"> -</span><span> x2</span><span style="color: light-dark(#D73A49, #F97583);"> *</span><span> y</span><span style="color: light-dark(#D73A49, #F97583);"> *</span><span> y</span><span>)</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>#</span><span>[</span><span>rustler</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span>nif</span><span>]</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">fn</span><span style="color: light-dark(#6F42C1, #B392F0);"> phi_formula</span><span>(</span><span>n</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#6F42C1, #B392F0);"> i32</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> -&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> f64</span><span> {</span></span>
+<span class="giallo-l"><span>    (</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">PHI</span><span style="color: light-dark(#D73A49, #F97583);">.</span><span style="color: light-dark(#6F42C1, #B392F0);">powi</span><span>(</span><span>n</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> -</span><span> (</span><span style="color: light-dark(#D73A49, #F97583);">-</span><span style="color: light-dark(#005CC5, #79B8FF);">PHI</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">.</span><span style="color: light-dark(#6F42C1, #B392F0);">powi</span><span>(</span><span style="color: light-dark(#D73A49, #F97583);">-</span><span>n</span><span>)</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> *</span><span style="color: light-dark(#6F42C1, #B392F0);"> inv_sqrt</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">5</span><span style="color: light-dark(#005CC5, #79B8FF);">.</span><span style="color: light-dark(#005CC5, #79B8FF);">0</span><span>)</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">.</span><span style="color: light-dark(#6F42C1, #B392F0);">ceil</span><span>(</span><span>)</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>Of course the <code>phi_formula</code> implementation has the same issue as the elixir one since it is an approximation, it should not be super precise at large scale.</p>
+<p>Lets talk about the Rust implementation of Fibonacci, as you can see is $O(N)$ and notice we are just using 2 variables instead of 3, this is because an arithmetic operation should be faster than storing in a CPU register. Also notice that Rust forces us to put types and,
+we are using <code>u128</code>, so this way we can compute and store really big integer.</p>
+<h3 id="wait-something-weird-is-happening">Wait something weird is happening</h3>
+<p>When I was testing the code for this article, I realized that sometimes Rust implementation was not consistant with the Elixir one, especially at large scale.</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="elixir"><span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">##</span><span style="color: light-dark(#6A737D, #6A737D);"> Elixir impl with 100 input</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">iex</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">1</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> FibRustElixir</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">fib</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">100</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">354224848179261915075</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">##</span><span style="color: light-dark(#6A737D, #6A737D);"> Rust impl with 100 input</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">iex</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">2</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> TurboFibonacci</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">fib</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">100</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">354224848179261915075</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">##</span><span style="color: light-dark(#6A737D, #6A737D);"> Elixir impl with 200 input</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">iex</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">3</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> FibRustElixir</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">fib</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">200</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">280571172992510140037611932413038677189525</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">##</span><span style="color: light-dark(#6A737D, #6A737D);"> Rust impl with 200 input</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">iex</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">4</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> TurboFibonacci</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">fib</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">200</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">178502649656846143791255889261670949781</span></span></code></pre>
+<p>It seems everything is correct, for <code>100</code>, but things are getting weird for <code>200</code>.
+What the hell the same algorithm gives different result ?</p>
+<p>The answer is called overflow. Since Rust is working with limited size integers it overflows for big numbers.</p>
+<p>Why Elixir does not have this problem ? It is because Elixir integers are dynamically sized. It creates a little bit of overhead because you must do allocations to fit the integer, but it allows you to have an "infinite" integer. I recommend this read <a rel="external" href="https://dev.to/abreujp/understanding-numbers-in-elixir-na5">Learning Elixir: Understanding Numbers</a>, in order to have a better understanding of what Elixir is doing.</p>
+<p>Then I wondered, What if I can make the same Elixir behaviour in Rust ?</p>
+<p>Thankfully, there are already super smart people in the Rust ecosystem that thought about
+this problem, and I observed that there was already a <code>crate</code> for this <code>num_bigint</code>.</p>
+<p>Another thing, one of the guys who did <code>rustler</code>, thought about this problem and
+he integrated <code>rustler</code> with <code>num_bigint</code>, so this way you can have a translation layer with these kind of integers in Rust. Take a look the <a rel="external" href="https://docs.rs/rustler/latest/rustler/struct.BigInt.html#impl-Encoder-for-BigInt">Encoder impl for BigInt</a>, this is the translation layer for Rust <code>BigInt</code> to Elixir <code>term</code> which is an <code>integer</code>.</p>
+<p>Lets take a look to the implementation with <code>BigInt</code></p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="rust"><span class="giallo-l"><span>#</span><span>[</span><span>rustler</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span>nif</span><span>]</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">fn</span><span style="color: light-dark(#6F42C1, #B392F0);"> fib_bignums</span><span>(</span><span>n</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#6F42C1, #B392F0);"> u128</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> -&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> BigInt</span><span> {</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    let</span><span style="color: light-dark(#D73A49, #F97583);"> mut</span><span> a</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#6F42C1, #B392F0);"> BigUint</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span style="color: light-dark(#6F42C1, #B392F0);">zero</span><span>(</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    let</span><span style="color: light-dark(#D73A49, #F97583);"> mut</span><span> b</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#6F42C1, #B392F0);"> BigUint</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span style="color: light-dark(#6F42C1, #B392F0);">one</span><span>(</span><span>)</span><span>;</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    let</span><span style="color: light-dark(#D73A49, #F97583);"> mut</span><span> i</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#005CC5, #79B8FF);"> 1</span><span>;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    while</span><span> i</span><span style="color: light-dark(#D73A49, #F97583);"> &lt;</span><span> n</span><span> {</span></span>
+<span class="giallo-l"><span>        b</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#D73A49, #F97583);"> &amp;</span><span>a</span><span style="color: light-dark(#D73A49, #F97583);"> +</span><span style="color: light-dark(#D73A49, #F97583);"> &amp;</span><span>b</span><span>;</span></span>
+<span class="giallo-l"><span>        a</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#D73A49, #F97583);"> &amp;</span><span>b</span><span style="color: light-dark(#D73A49, #F97583);"> -</span><span style="color: light-dark(#D73A49, #F97583);"> &amp;</span><span>a</span><span>;</span></span>
+<span class="giallo-l"><span>        i</span><span style="color: light-dark(#D73A49, #F97583);"> +=</span><span style="color: light-dark(#005CC5, #79B8FF);"> 1</span><span>;</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">    BigInt</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span style="color: light-dark(#6F42C1, #B392F0);">from_biguint</span><span>(</span><span style="color: light-dark(#6F42C1, #B392F0);">Sign</span><span style="color: light-dark(#D73A49, #F97583);">::</span><span style="color: light-dark(#6F42C1, #B392F0);">Plus</span><span>,</span><span> b</span><span>)</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>As you can see nothing really changes, now we are using the big integer which are resizable,
+and allow us to store massive integers.</p>
+<p>Lets try with this implementation and see if it gives the same result as Elixir one.</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="elixir"><span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">##</span><span style="color: light-dark(#6A737D, #6A737D);"> Elixir with input 200</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">iex</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">3</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> FibRustElixir</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">fib</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">200</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">280571172992510140037611932413038677189525</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">##</span><span style="color: light-dark(#6A737D, #6A737D);"> Rust `u128` with input 200</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">iex</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">4</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> TurboFibonacci</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">fib</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">200</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">178502649656846143791255889261670949781</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">##</span><span style="color: light-dark(#6A737D, #6A737D);"> Rust resizable integers with input 200</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">iex</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">5</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> TurboFibonacci</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">fib_bignums</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">200</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">280571172992510140037611932413038677189525</span></span></code></pre>
+<p>YES! It works! Now we can compute and store massive Fibonacci calculations.</p>
+<h3 id="theory-pretty-cool-but-show-me-the-numbers">Theory pretty cool, but show me the numbers.</h3>
+<p>Ok ok, now is the moment you were waiting for! The benchmarks and see if the theory is confirmed.</p>
+<p>The benchmark library I will be using is <a rel="external" href="https://github.com/bencheeorg/benchee">Benchee</a>, this library allow me to compare and obtain stats for each implementation
+and different inputs.</p>
+<p>I would like to explain I have divided the benchmarking in 2. Relative small inputs,
+less than <code>100</code>, and really big inputs from <code>200_000</code>.</p>
+<p>These are the specs of my system</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="plain"><span class="giallo-l"><span>Operating System: Linux</span></span>
+<span class="giallo-l"><span>CPU Information: 13th Gen Intel(R) Core(TM) i5-1335U</span></span>
+<span class="giallo-l"><span>Number of Available Cores: 12</span></span>
+<span class="giallo-l"><span>Available memory: 15.30 GB</span></span>
+<span class="giallo-l"><span>Elixir 1.18.4</span></span>
+<span class="giallo-l"><span>Erlang 27.3.4.3</span></span>
+<span class="giallo-l"><span>JIT enabled: true</span></span></code></pre>
+<p>This is the setup for low inputs.</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="elixir"><span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  def</span><span style="color: light-dark(#6F42C1, #B392F0);"> bench</span><span>(</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> do</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">    Benchee</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">run</span><span>(</span></span>
+<span class="giallo-l"><span>      %</span><span>{</span></span>
+<span class="giallo-l"><span style="color: light-dark(#032F62, #9ECBFF);">        &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">Elixir O(N) Algorithm</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);"> =&gt;</span><span> &amp;</span><span>fib</span><span style="color: light-dark(#D73A49, #F97583);">/</span><span style="color: light-dark(#005CC5, #79B8FF);">1</span><span>,</span></span>
+<span class="giallo-l"><span style="color: light-dark(#032F62, #9ECBFF);">        &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">Elixir O(2^n) Algorithm Memo</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);"> =&gt;</span><span> &amp;</span><span>dp_slow_fib</span><span style="color: light-dark(#D73A49, #F97583);">/</span><span style="color: light-dark(#005CC5, #79B8FF);">1</span><span>,</span></span>
+<span class="giallo-l"><span style="color: light-dark(#032F62, #9ECBFF);">        &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">Elixir O(1) Algorithm Phi formula</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);"> =&gt;</span><span> &amp;</span><span>phi_formula</span><span style="color: light-dark(#D73A49, #F97583);">/</span><span style="color: light-dark(#005CC5, #79B8FF);">1</span><span>,</span></span>
+<span class="giallo-l"><span style="color: light-dark(#032F62, #9ECBFF);">        &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">Rust O(1) Algorithm Phi formula</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);"> =&gt;</span><span> &amp;</span><span style="color: light-dark(#6F42C1, #B392F0);">TurboFibonacci</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">phi_formula</span><span style="color: light-dark(#D73A49, #F97583);">/</span><span style="color: light-dark(#005CC5, #79B8FF);">1</span><span>,</span></span>
+<span class="giallo-l"><span style="color: light-dark(#032F62, #9ECBFF);">        &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">Rust O(N) Algorithm</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);"> =&gt;</span><span> &amp;</span><span style="color: light-dark(#6F42C1, #B392F0);">TurboFibonacci</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">fib</span><span style="color: light-dark(#D73A49, #F97583);">/</span><span style="color: light-dark(#005CC5, #79B8FF);">1</span><span>,</span></span>
+<span class="giallo-l"><span style="color: light-dark(#032F62, #9ECBFF);">        &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">Rust O(N) Algorithm expanding nums</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);"> =&gt;</span></span>
+<span class="giallo-l"><span>          &amp;</span><span style="color: light-dark(#6F42C1, #B392F0);">TurboFibonacci</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">fib_bignums</span><span style="color: light-dark(#D73A49, #F97583);">/</span><span style="color: light-dark(#005CC5, #79B8FF);">1</span></span>
+<span class="giallo-l"><span>      }</span><span>,</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">      inputs</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span> %</span><span>{</span></span>
+<span class="giallo-l"><span style="color: light-dark(#032F62, #9ECBFF);">        &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">1</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);"> =&gt;</span><span style="color: light-dark(#005CC5, #79B8FF);"> 1</span><span>,</span></span>
+<span class="giallo-l"><span style="color: light-dark(#032F62, #9ECBFF);">        &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">71</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);"> =&gt;</span><span style="color: light-dark(#005CC5, #79B8FF);"> 71</span><span>,</span></span>
+<span class="giallo-l"><span style="color: light-dark(#032F62, #9ECBFF);">        &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">100</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);"> =&gt;</span><span style="color: light-dark(#005CC5, #79B8FF);"> 100</span></span>
+<span class="giallo-l"><span>      }</span><span>,</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">      parallel</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> 2</span><span>,</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">      after_scenario</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#D73A49, #F97583);"> fn</span><span style="color: light-dark(#6A737D, #6A737D);"> _input</span><span style="color: light-dark(#D73A49, #F97583);"> -&gt;</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">        if</span><span style="color: light-dark(#005CC5, #79B8FF);"> :ets</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">whereis</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">fibs</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> !=</span><span style="color: light-dark(#005CC5, #79B8FF);"> :</span><span style="color: light-dark(#005CC5, #79B8FF);">undefined</span><span style="color: light-dark(#D73A49, #F97583);"> do</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">          :ets</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">delete</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">fibs</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">        end</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">      end</span></span>
+<span class="giallo-l"><span>    )</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">    nil</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  end</span></span></code></pre>
+<p>Before you look the results you need to consider that Rust expanding nums implementation was run with the dirty scheduler in Erlang, without it is still the worst, because of the overhead it has, but not so much worse around 33x slower. Also consider invalid $\Phi$ formula implementations for the <code>input &gt;= 71</code> or <code>input &gt;= 75</code>, because they start to not give a precise value after that.</p>
+<p>As you can see here the result for input 71 is correct for 72 is not, as well in the $\phi$ elixir implementation.</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="elixir"><span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">##</span><span style="color: light-dark(#6A737D, #6A737D);"># Input 71</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">iex</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">2</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> TurboFibonacci</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">phi_formula</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">71</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">308061521170129.0</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">iex</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">3</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> TurboFibonacci</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">fib</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">71</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">308061521170129</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">##</span><span style="color: light-dark(#6A737D, #6A737D);"># Input 72</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">iex</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">4</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> TurboFibonacci</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">phi_formula</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">72</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">498454011879263.0</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">iex</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">5</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> FibRustElixir</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">phi_formula</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">72</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">498454011879264</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">iex</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">6</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> TurboFibonacci</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">fib</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">72</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">498454011879264</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">##</span><span style="color: light-dark(#6A737D, #6A737D);"># Input 75</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">iex</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">12</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> FibRustElixir</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">phi_formula</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">75</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">2111485077978050</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">iex</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">13</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> TurboFibonacci</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">fib</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">75</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">2111485077978050</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">##</span><span style="color: light-dark(#6A737D, #6A737D);"># Input 76</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">iex</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">14</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> FibRustElixir</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">phi_formula</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">76</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">3416454622906708</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">iex</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">15</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> TurboFibonacci</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">fib</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">76</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">3416454622906707</span></span></code></pre>
+<p>Here are the results for the benchmark low inputs.</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="plain"><span class="giallo-l"><span>##### With input 1 #####</span></span>
+<span class="giallo-l"><span>Name                                         ips        average  deviation         median         99th %</span></span>
+<span class="giallo-l"><span>Elixir O(N) Algorithm                    16.38 M       61.07 ns ±45774.27%          44 ns          71 ns</span></span>
+<span class="giallo-l"><span>Rust O(1) Algorithm Phi formula           9.15 M      109.26 ns  ±4221.28%         100 ns         210 ns</span></span>
+<span class="giallo-l"><span>Rust O(N) Algorithm                       8.26 M      121.09 ns ±23343.76%         100 ns         203 ns</span></span>
+<span class="giallo-l"><span>Elixir O(1) Algorithm Phi formula         3.31 M      302.31 ns   ±136.52%         260 ns         531 ns</span></span>
+<span class="giallo-l"><span>Elixir O(2^n) Algorithm Memo              1.19 M      838.18 ns  ±5624.56%         787 ns        1101 ns</span></span>
+<span class="giallo-l"><span>Rust O(N) Algorithm expanding nums       0.188 M     5308.94 ns    ±84.14%        4395 ns    16176.06 ns</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Comparison:</span></span>
+<span class="giallo-l"><span>Elixir O(N) Algorithm                    16.38 M</span></span>
+<span class="giallo-l"><span>Rust O(1) Algorithm Phi formula           9.15 M - 1.79x slower +48.19 ns</span></span>
+<span class="giallo-l"><span>Rust O(N) Algorithm                       8.26 M - 1.98x slower +60.03 ns</span></span>
+<span class="giallo-l"><span>Elixir O(1) Algorithm Phi formula         3.31 M - 4.95x slower +241.25 ns</span></span>
+<span class="giallo-l"><span>Elixir O(2^n) Algorithm Memo              1.19 M - 13.73x slower +777.11 ns</span></span>
+<span class="giallo-l"><span>Rust O(N) Algorithm expanding nums       0.188 M - 86.93x slower +5247.87 ns</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>##### With input 100 #####</span></span>
+<span class="giallo-l"><span>Name                                         ips        average  deviation         median         99th %</span></span>
+<span class="giallo-l"><span>Rust O(1) Algorithm Phi formula           8.09 M      123.63 ns   ±263.70%         113 ns         195 ns</span></span>
+<span class="giallo-l"><span>Rust O(N) Algorithm                       4.63 M      215.80 ns   ±356.51%         198 ns         419 ns</span></span>
+<span class="giallo-l"><span>Elixir O(1) Algorithm Phi formula         3.15 M      317.82 ns   ±209.58%         277 ns         615 ns</span></span>
+<span class="giallo-l"><span>Elixir O(2^n) Algorithm Memo              1.45 M      687.71 ns  ±8165.87%         587 ns         924 ns</span></span>
+<span class="giallo-l"><span>Elixir O(N) Algorithm                     0.66 M     1517.15 ns  ±2172.62%        1380 ns        1928 ns</span></span>
+<span class="giallo-l"><span>Rust O(N) Algorithm expanding nums      0.0784 M    12753.08 ns    ±55.31%       13905 ns       24389 ns</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Comparison:</span></span>
+<span class="giallo-l"><span>Rust O(1) Algorithm Phi formula           8.09 M</span></span>
+<span class="giallo-l"><span>Rust O(N) Algorithm                       4.63 M - 1.75x slower +92.17 ns</span></span>
+<span class="giallo-l"><span>Elixir O(1) Algorithm Phi formula         3.15 M - 2.57x slower +194.18 ns</span></span>
+<span class="giallo-l"><span>Elixir O(2^n) Algorithm Memo              1.45 M - 5.56x slower +564.08 ns</span></span>
+<span class="giallo-l"><span>Elixir O(N) Algorithm                     0.66 M - 12.27x slower +1393.51 ns</span></span>
+<span class="giallo-l"><span>Rust O(N) Algorithm expanding nums      0.0784 M - 103.15x slower +12629.45 ns</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>##### With input 71 #####</span></span>
+<span class="giallo-l"><span>Name                                         ips        average  deviation         median         99th %</span></span>
+<span class="giallo-l"><span>Rust O(1) Algorithm Phi formula           7.75 M      128.97 ns  ±4535.63%         117 ns         230 ns</span></span>
+<span class="giallo-l"><span>Rust O(N) Algorithm                       6.54 M      152.88 ns ±19215.97%         123 ns         224 ns</span></span>
+<span class="giallo-l"><span>Elixir O(1) Algorithm Phi formula         3.40 M      294.01 ns   ±339.67%         258 ns         533 ns</span></span>
+<span class="giallo-l"><span>Elixir O(2^n) Algorithm Memo              1.43 M      700.42 ns  ±9294.91%         581 ns         904 ns</span></span>
+<span class="giallo-l"><span>Elixir O(N) Algorithm                     1.15 M      869.80 ns   ±184.80%         853 ns        1259 ns</span></span>
+<span class="giallo-l"><span>Rust O(N) Algorithm expanding nums      0.0940 M    10633.12 ns    ±73.98%       10948 ns       20597 ns</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Comparison:</span></span>
+<span class="giallo-l"><span>Rust O(1) Algorithm Phi formula           7.75 M</span></span>
+<span class="giallo-l"><span>Rust O(N) Algorithm                       6.54 M - 1.19x slower +23.91 ns</span></span>
+<span class="giallo-l"><span>Elixir O(1) Algorithm Phi formula         3.40 M - 2.28x slower +165.04 ns</span></span>
+<span class="giallo-l"><span>Elixir O(2^n) Algorithm Memo              1.43 M - 5.43x slower +571.45 ns</span></span>
+<span class="giallo-l"><span>Elixir O(N) Algorithm                     1.15 M - 6.74x slower +740.83 ns</span></span>
+<span class="giallo-l"><span>Rust O(N) Algorithm expanding nums      0.0940 M - 82.44x slower +10504.15 ns</span></span></code></pre><pre class="mermaid bg-inherit">
+  ---
+config:
+  themeVariables:
+    xyChart:
+      plotColorPalette: &#x27;#B7410E, #7C6D91&#x27;
+---
+xychart
+    title &quot;Low numbers benchmark input 1&quot;
+    x-axis &quot;Algorithm&quot; [&quot;Rust Phi&quot;, &quot;Elixir Phi&quot;, &quot;Rust O(N)&quot;, &quot;Elixir O(N)&quot;, &quot;Elixir O(2^N) Memo&quot; ]
+    y-axis &quot;Time in nanoseconds&quot; 1 --&gt; 1200
+    bar [210, -1000, 203 ,-1000, -1000]
+    bar [-1000, 531, -1000 , 71, 1101]
+</pre>
+<pre class="mermaid bg-inherit">
+  ---
+config:
+  themeVariables:
+    xyChart:
+      plotColorPalette: &#x27;#B7410E, #7C6D91&#x27;
+---
+xychart
+    title &quot;Low numbers benchmark input 71&quot;
+    x-axis &quot;Algorithm&quot; [&quot;Rust Phi&quot;, &quot;Elixir Phi&quot;, &quot;Rust O(N)&quot;, &quot;Elixir O(N)&quot;, &quot;Elixir O(2^N) Memo&quot; ]
+    y-axis &quot;Time in nanoseconds&quot; 1 --&gt; 1300
+    bar [230, -1000, 224 ,-1000, -1000]
+    bar [-1000, 533, -1000 , 1259, 904]
+</pre>
+<pre class="mermaid bg-inherit">
+  ---
+config:
+  themeVariables:
+    xyChart:
+      plotColorPalette: &#x27;#B7410E, #7C6D91&#x27;
+---
+xychart
+    title &quot;Low numbers benchmark input 100&quot;
+    x-axis &quot;Algorithm&quot; [&quot;Rust O(N)&quot;, &quot;Elixir O(N)&quot;, &quot;Elixir O(2^N) Memo&quot; ]
+    y-axis &quot;Time in nanoseconds&quot; 1 --&gt; 2000
+    bar [419,-1000, -1000]
+    bar [-1000 , 1928, 924]
+</pre>
+<p>The conclusion we can make here is that for really small inputs Rust NIF is
+worth it to use even if Elixir wins for input 1 because it is a clause in the
+function almost without any overhead. $\Phi$ algorithm is not so fast for low
+inputs so it is not worth to use. Notice that Rust expandable integers
+implementation has a super big overhead which is not compensate with the small
+input.</p>
+<p>This is the setup I was doing for Big numbers,</p>
+<p>As you can see here we have much bigger inputs, other functions cannot be included in
+this benchmark because they will lose <code>precision</code>, they will take too much <code>time</code> or
+they will take too much <code>memory</code>.</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="elixir"><span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  def</span><span style="color: light-dark(#6F42C1, #B392F0);"> bench_large_numbers</span><span>(</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> do</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">    Benchee</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">run</span><span>(</span></span>
+<span class="giallo-l"><span>      %</span><span>{</span></span>
+<span class="giallo-l"><span style="color: light-dark(#032F62, #9ECBFF);">        &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">Elixir O(N) Algorithm</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);"> =&gt;</span><span> &amp;</span><span>fib</span><span style="color: light-dark(#D73A49, #F97583);">/</span><span style="color: light-dark(#005CC5, #79B8FF);">1</span><span>,</span></span>
+<span class="giallo-l"><span style="color: light-dark(#032F62, #9ECBFF);">        &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">Rust O(N) Algorithm expanding nums</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);"> =&gt;</span></span>
+<span class="giallo-l"><span>        &amp;</span><span style="color: light-dark(#6F42C1, #B392F0);">TurboFibonacci</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">fib_bignums</span><span style="color: light-dark(#D73A49, #F97583);">/</span><span style="color: light-dark(#005CC5, #79B8FF);">1</span></span>
+<span class="giallo-l"><span>      }</span><span>,</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">      inputs</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span> %</span><span>{</span></span>
+<span class="giallo-l"><span style="color: light-dark(#032F62, #9ECBFF);">        &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">200_000</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);"> =&gt;</span><span style="color: light-dark(#005CC5, #79B8FF);"> 200_000</span><span>,</span></span>
+<span class="giallo-l"><span style="color: light-dark(#032F62, #9ECBFF);">        &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">500_000</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);"> =&gt;</span><span style="color: light-dark(#005CC5, #79B8FF);"> 500_000</span><span>,</span></span>
+<span class="giallo-l"><span style="color: light-dark(#032F62, #9ECBFF);">        &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">1 Million</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);"> =&gt;</span><span style="color: light-dark(#005CC5, #79B8FF);"> 1_000_000</span><span>,</span></span>
+<span class="giallo-l"><span style="color: light-dark(#032F62, #9ECBFF);">        &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">2 Million</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);"> =&gt;</span><span style="color: light-dark(#005CC5, #79B8FF);"> 2_000_000</span><span>,</span></span>
+<span class="giallo-l"><span>      }</span><span>,</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">      parallel</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> 2</span></span>
+<span class="giallo-l"><span>    )</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  end</span></span></code></pre>
+<p>These are the results for the big numbers benchmark.</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="plain"><span class="giallo-l"><span>##### With input 1 Million #####</span></span>
+<span class="giallo-l"><span>Name                                         ips        average  deviation         median         99th %</span></span>
+<span class="giallo-l"><span>Rust O(N) Algorithm expanding nums        0.0890        11.23 s     ±0.09%        11.23 s        11.24 s</span></span>
+<span class="giallo-l"><span>Elixir O(N) Algorithm                     0.0798        12.54 s     ±0.00%        12.54 s        12.54 s</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Comparison:</span></span>
+<span class="giallo-l"><span>Rust O(N) Algorithm expanding nums        0.0890</span></span>
+<span class="giallo-l"><span>Elixir O(N) Algorithm                     0.0798 - 1.12x slower +1.30 s</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>##### With input 2 Million #####</span></span>
+<span class="giallo-l"><span>Name                                         ips        average  deviation         median         99th %</span></span>
+<span class="giallo-l"><span>Elixir O(N) Algorithm                     0.0238       0.70 min     ±2.11%       0.70 min       0.71 min</span></span>
+<span class="giallo-l"><span>Rust O(N) Algorithm expanding nums        0.0101       1.64 min     ±0.01%       1.64 min       1.64 min</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Comparison:</span></span>
+<span class="giallo-l"><span>Elixir O(N) Algorithm                     0.0238</span></span>
+<span class="giallo-l"><span>Rust O(N) Algorithm expanding nums        0.0101 - 2.35x slower +0.94 min</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>##### With input 200_000 #####</span></span>
+<span class="giallo-l"><span>Name                                         ips        average  deviation         median         99th %</span></span>
+<span class="giallo-l"><span>Rust O(N) Algorithm expanding nums          3.04      328.71 ms     ±0.56%      328.21 ms      333.74 ms</span></span>
+<span class="giallo-l"><span>Elixir O(N) Algorithm                       1.50      668.81 ms     ±5.29%      659.64 ms      728.12 ms</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Comparison:</span></span>
+<span class="giallo-l"><span>Rust O(N) Algorithm expanding nums          3.04</span></span>
+<span class="giallo-l"><span>Elixir O(N) Algorithm                       1.50 - 2.03x slower +340.10 ms</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>##### With input 500_000 #####</span></span>
+<span class="giallo-l"><span>Name                                         ips        average  deviation         median         99th %</span></span>
+<span class="giallo-l"><span>Rust O(N) Algorithm expanding nums          0.44         2.25 s     ±0.14%         2.25 s         2.25 s</span></span>
+<span class="giallo-l"><span>Elixir O(N) Algorithm                       0.23         4.33 s     ±2.59%         4.33 s         4.43 s</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Comparison:</span></span>
+<span class="giallo-l"><span>Rust O(N) Algorithm expanding nums          0.44</span></span>
+<span class="giallo-l"><span>Elixir O(N) Algorithm                       0.23 - 1.93x slower +2.09 s</span></span></code></pre><pre class="mermaid bg-inherit">
+  ---
+config:
+  themeVariables:
+    xyChart:
+      plotColorPalette: &#x27;#B7410E, #7C6D91&#x27;
+---
+xychart
+    title &quot;Big numbers benchmark&quot;
+    x-axis &quot;Algorithm and input&quot; [&quot;E(200k)&quot;, &quot;R(200k)&quot;, &quot;E(500k)&quot;, &quot;R(500k)&quot;, &quot;E(1M)&quot;, &quot;R(1M)&quot; ]
+    y-axis &quot;Time in seconds&quot; 0 --&gt; 15
+    bar [-1, 0.33374, -1 , 2.25, -1, 11.24]
+    bar [0.72812, -1, 4.43 ,-1, 12.54, -1]
+</pre>
+<pre class="mermaid bg-inherit">
+  ---
+config:
+  themeVariables:
+    xyChart:
+      plotColorPalette: &#x27;#B7410E, #7C6D91&#x27;
+---
+xychart
+    title &quot;Big numbers benchmark (2 million)&quot;
+    x-axis &quot;Algorithm and input&quot; [&quot;E(2M)&quot;, &quot;R(2M)&quot;]
+    y-axis &quot;Time in seconds&quot; 1 --&gt; 100
+    bar [ -1 , 98.4 ]
+    bar [42.6  ,-1 ]
+</pre>
+<p>This is really interesting result, since it seems Rust expanding nums it pays the overhead by winning Elixir to all the inputs except for 2 million, I believe why Elixir wins in 2 million input is because some sort of reallocation optimization which is not in Rust.</p>
+<h3 id="conclusion">Conclusion</h3>
+<p>For every peak performance algorithm you should analyze your inputs and make correct assumptions like <code>input &lt;= 71</code>, so this way you benefit of the approximation algorithm.</p>
+<p>If your inputs are super large, consider using native code, instead of working in VM code.
+It seems to pay off the Native code, in fact Elixir is kinda cheating because Erlang is probably calling some C code to compute this kinda numbers.</p>
+<p>Benchmark! Always test your things with stress, load and speed benchmarking, this way you can ensure that your algorithm is gonna behave how you will expect.</p>
+<p>Of course there is much more strategies here which I did not cover, like Multi-threading, dividing the work in chunks and so on...</p>
+<p>Hopefully you liked the article, all the code of the article is available in <a rel="external" href="https://github.com/pxp9/fibonacci_numbers">Github</a></p>
+</section>
+
+  <hr />
+
+  <!-- Post Taxonomies -->
+  
+<footer class="mt-12 flex flex-col">
+  <!---->
+  <!---->
+  <!---->
+  <!---->
+  
+  <div class="mb-2 flex flex-wrap">
+    <span class="block-bg mb-1.5 mr-1.5 rounded-lg px-5 py-1.5">Tags </span>
+    
+    <a
+      class="block-bg block-hover mb-1.5 mr-1.5 rounded-lg px-5 py-1.5 no-underline"
+      href="https://pmarquez.net/tags/elixir/"
+      >elixir</a
+    >
+    
+    <a
+      class="block-bg block-hover mb-1.5 mr-1.5 rounded-lg px-5 py-1.5 no-underline"
+      href="https://pmarquez.net/tags/rust/"
+      >rust</a
+    >
+    
+  </div>
+  
+</footer>
+
+<!---->
+
+  <!-- Post Nav -->
+  
+<nav class="block-bg mt-12 flex flex-wrap rounded-lg text-lg">
+  
+  <a
+    class="block-hover-mask flex min-w-[50%] grow items-center rounded-l-md p-6 pr-3 font-semibold no-underline"
+    href="https:&#x2F;&#x2F;pmarquez.net&#x2F;lazy-doc&#x2F;"
+    ><span class="mr-1.5">←</span><span>Lazy Doc, Your documentation tool has arrived.</span></a
+  >
+  <!---->
+  
+  <a
+    class="block-hover-mask ml-auto flex min-w-[50%] grow items-center justify-end rounded-r-md p-6 pl-3 font-semibold no-underline"
+    href="https:&#x2F;&#x2F;pmarquez.net&#x2F;iot-intro&#x2F;"
+    ><span>A gentle introduction to Elixir IoT</span><span class="ml-1.5">→</span></a
+  >
+  
+</nav>
+
+<!---->
+
+  <!-- Comment -->
+  
+
+  <!-- Page End inject -->
+  
+</article>
+
+    </main>
+
+    <footer class="mx-auto flex max-w-3xl flex-wrap items-center px-8 py-4 text-sm opacity-60">
+  <div class="mr-auto basis-full lg:basis-1/2">
+    <!---->
+    <!---->
+    &copy; 2026<!---->
+    
+    <a class="link" href="https://pmarquez.net">
+      pxp9
+    </a>
+    
+  </div>
+  <div class="flex basis-full lg:basis-1/2 lg:justify-end">
+    <a class="link mr-6 lg:ml-6" href="https://www.getzola.org/" rel="noopener" target="_blank">
+      Powered by Zola
+    </a>
+  </div>
+  <!-- Footer inject -->
+  
+</footer>
+
+
+    <!-- Body End inject -->
+    
+  </body>
+</html>

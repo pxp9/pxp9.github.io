@@ -1,0 +1,741 @@
+<!doctype html>
+<html class="not-ready lg:text-base" lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+  <!-- Title -->
+  <title>
+    Lazy Doc, Your documentation tool has arrived. - Software Engineer Oasis
+  </title>
+
+  <!-- Meta -->
+  <meta name="theme-color" />
+
+  
+  <!-- Author -->
+  
+  <!---->
+  
+  <!---->
+  
+  <!---->
+  
+  <!---->
+  
+  <!---->
+  <meta name="description" content="An AI empowered documentation tool." />
+  <meta name="author" content="pxp9" />
+  <!-- The Open Graph protocol -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Lazy Doc, Your documentation tool has arrived." />
+  <meta property="og:site_name" content="Software Engineer Oasis" />
+  <meta property="og:description" content="An AI empowered documentation tool." />
+  <meta property="og:url" content="https:&#x2F;&#x2F;pmarquez.net&#x2F;lazy-doc&#x2F;" />
+  
+  <!---->
+  
+  <!---->
+  
+  <!---->
+  
+  <meta property="og:image" content="https://pmarquez.net/images/lazy_doc.webp" />
+  
+  <!---->
+  
+
+  <!-- CSS & JS -->
+  <link rel="preload stylesheet" as="style" href="https://pmarquez.net/main.css" />
+  <style>
+    :root {
+      --bg: #f4f4f5;
+      --bg-dark: #18181b;
+      --header: #e4e4e7;
+      --header-dark: #27272a;
+    }
+  </style>
+
+  
+
+  <!-- Dark Icon -->
+  <link rel="preload" as="image" href="https://pmarquez.net/icons/theme.svg" />
+
+  <!-- Math -->
+  
+  <!---->
+
+  <!-- Mermaid -->
+  
+  <!---->
+
+  <!-- Favicon -->
+  <link rel="icon" href="https://pmarquez.net/favicon.ico" />
+  <link rel="apple-touch-icon" href="https://pmarquez.net/apple-touch-icon.png" />
+
+  <!-- Feeds -->
+  
+  <!---->
+   
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title="RSS"
+    href="https://pmarquez.net/rss.xml"
+  />
+  
+  <!---->
+  
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https:&#x2F;&#x2F;pmarquez.net&#x2F;lazy-doc&#x2F;" />
+
+  <!-- Head inject -->
+  
+</head>
+
+  <body class="text-black duration-200 ease-out dark:text-white">
+    <header
+  class="header fixed top-0 z-40 mx-auto min-h-[3.5rem] w-full"
+>
+  <div class="mx-auto w-full max-w-4xl p-3 lg:flex lg:justify-between">
+    <div class="flex justify-between">
+      <div class="flex items-center">
+        <a class="text-2xl font-semibold" href="https://pmarquez.net">Software Engineer Oasis</a>
+        <div
+          class="btn-dark ml-4 h-6 w-6 shrink-0 cursor-pointer text-[0] [background:url(./icons/theme.svg)_left_center/cover_no-repeat] dark:invert dark:[background-position:right]"
+          role="button"
+          aria-label="Dark"
+        ></div>
+      </div>
+      
+      <div
+        class="btn-menu relative z-50 flex h-8 w-8 shrink-0 cursor-pointer flex-col items-center justify-center gap-2.5 lg:hidden"
+        role="button"
+        aria-label="Menu"
+      ></div>
+      
+    </div>
+    <script>
+      // base
+      const htmlClass = document.documentElement.classList;
+      setTimeout(() => {
+        htmlClass.remove("not-ready");
+      }, 10);
+
+      // mobile menu
+      const btnMenu = document.querySelector(".btn-menu");
+      btnMenu?.addEventListener("click", () => {
+        htmlClass.toggle("open");
+      });
+
+      // dark theme
+      const setDark = (isDark) => {
+        if (isDark) {
+          document.body.dispatchEvent(new CustomEvent("set-theme", { detail: "dark" }));
+          htmlClass.add("dark");
+        } else {
+          document.body.dispatchEvent(new CustomEvent("set-theme", { detail: "light" }));
+          htmlClass.remove("dark");
+        }
+        localStorage.setItem("dark", isDark);
+      };
+
+      // init
+      const darkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+      if (htmlClass.contains("dark")) {
+        setDark(true);
+      } else {
+        const darkVal = localStorage.getItem("dark");
+        setDark(darkVal ? darkVal === "true" : darkScheme.matches);
+      }
+
+      // listen system
+      darkScheme.addEventListener("change", (event) => {
+        setDark(event.matches);
+      });
+
+      // manual switch
+      const btnDark = document.querySelector(".btn-dark");
+      btnDark.addEventListener("click", () => {
+        setDark(localStorage.getItem("dark") !== "true");
+      });
+    </script>
+    
+    <nav class="flex w-full items-center lg:w-auto">
+      <ul
+        class="nav-wrapper flex w-full flex-col py-2 lg:w-auto lg:flex-row lg:self-center lg:py-0"
+      >
+        
+        <li>
+          <a
+            class="primary-link block py-2 text-center text-lg font-medium lg:px-3 lg:py-0"
+            href="https://pmarquez.net/projects"
+            >Projects</a
+          >
+        </li>
+        
+        <li>
+          <a
+            class="primary-link block py-2 text-center text-lg font-medium lg:px-3 lg:py-0"
+            href="https://pmarquez.net/archive"
+            >Archive</a
+          >
+        </li>
+        
+        <li>
+          <a
+            class="primary-link block py-2 text-center text-lg font-medium lg:px-3 lg:py-0"
+            href="https://pmarquez.net/tags"
+            >Tags</a
+          >
+        </li>
+        
+        <li>
+          <a
+            class="primary-link block py-2 text-center text-lg font-medium lg:px-3 lg:py-0"
+            href="https://pmarquez.net/about"
+            >About</a
+          >
+        </li>
+        
+      </ul>
+      <!-- Header Nav inject -->
+      
+    </nav>
+    
+  </div>
+</header>
+
+
+    <!-- Body Start inject -->
+    
+
+    <main
+      class="prose prose-neutral relative mx-auto min-h-[calc(100%-9rem)] max-w-3xl break-words px-4 pb-16 pt-32 dark:prose-invert prose-pre:rounded-lg prose-img:rounded-lg"
+    >
+      
+<article>
+  <!-- Page Start inject -->
+  
+
+  <header class="mb-16">
+    <h1 class="!my-0 pb-2.5">Lazy Doc, Your documentation tool has arrived.</h1>
+    <div class="text-sm antialiased opacity-60">
+  
+  <time>2025-03-04</time>
+  <span class="mx-1">&middot;</span>
+  <span>11min</span>
+  <!---->
+  <!---->
+  <!---->
+  <!---->
+  
+  <span class="mx-1">&middot;</span>
+  <span>pxp9</span>
+  
+  <!-- Page Info inject -->
+  
+</div>
+
+  </header>
+
+  <!---->
+  <figure class="mb-12 mt-0">
+    <img
+      class="h-auto w-full rounded-lg"
+      src="https://pmarquez.net/images/lazy_doc.webp"
+      alt="A Markdown logo"
+    />
+  </figure>
+  
+
+  <!-- TOC -->
+  <!---->
+<div class="block-bg mb-12 flex rounded-lg p-2 text-lg">
+  <details>
+    <summary class="cursor-pointer py-1 pl-4">
+      <span>Table of Contents</span>
+    </summary>
+    <div class="px-2">
+      <ul>
+        
+        <li>
+          <a class="no-underline hover:underline" href="https://pmarquez.net/lazy-doc/#idea"
+            >Idea</a
+          >
+          
+        </li>
+        
+        <li>
+          <a class="no-underline hover:underline" href="https://pmarquez.net/lazy-doc/#what-is-lazy-doc"
+            >What is Lazy Doc ?</a
+          >
+          
+          <ul>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/lazy-doc/#purpose"
+                >Purpose</a
+              >
+            </li>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/lazy-doc/#documentation-criteria"
+                >Documentation criteria</a
+              >
+            </li>
+            
+          </ul>
+          
+        </li>
+        
+        <li>
+          <a class="no-underline hover:underline" href="https://pmarquez.net/lazy-doc/#how-is-it-built"
+            >How is it built ?</a
+          >
+          
+          <ul>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/lazy-doc/#process-line-by-line-approach"
+                >Process line by line approach</a
+              >
+            </li>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/lazy-doc/#asts-for-the-king-approach"
+                >ASTs for the king approach</a
+              >
+            </li>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/lazy-doc/#fetch-the-prompt"
+                >Fetch the prompt</a
+              >
+            </li>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/lazy-doc/#make-a-good-prompt-ai-is-like-a-kid-explain-what-you-want"
+                >Make a good prompt (AI is like a kid explain what you want).</a
+              >
+            </li>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/lazy-doc/#insert-the-docs-on-the-ast"
+                >Insert the docs on the AST</a
+              >
+            </li>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/lazy-doc/#the-end-of-the-trip"
+                >The end of the trip ?</a
+              >
+            </li>
+            
+            <li>
+              <a class="no-underline hover:underline" href="https://pmarquez.net/lazy-doc/#the-master-talk-about-ast-manipulation"
+                >The master talk about AST manipulation.</a
+              >
+            </li>
+            
+          </ul>
+          
+        </li>
+        
+        <li>
+          <a class="no-underline hover:underline" href="https://pmarquez.net/lazy-doc/#feature-requests"
+            >Feature requests</a
+          >
+          
+        </li>
+        
+        <li>
+          <a class="no-underline hover:underline" href="https://pmarquez.net/lazy-doc/#conclusion"
+            >Conclusion</a
+          >
+          
+        </li>
+        
+      </ul>
+    </div>
+  </details>
+</div>
+
+<!---->
+
+  <!-- Content -->
+  <section><h2 id="idea">Idea</h2>
+<p>All started with a conversation with my boss, I was talking to him about a game
+we play (Balatro, wonderful game), and suddenly he asked, Are you using AI to
+program ? I told him that current the state of the AI is not that good for
+suggesting <strong>production</strong> code, but it is good to suggest other things like
+explanations, suggest syntax fixes, etc... One of the problems we have in my
+company codebase is that we have so much undocumented code, which is not a big
+problem at all, because we have a really clear API of how to interact, but each
+time someone new comes to the project, you need to explain the localized
+knowledge. We also talked about AI writing docs might be good, but we did not
+even know because we had not tested yet. That was how Lazy Doc idea came from.</p>
+<h2 id="what-is-lazy-doc">What is Lazy Doc ?</h2>
+<p>Lazy Doc is a tool to improve your nonexistent or missing Elixir docs via AI. It
+detects undocumented functions, it gives the source code to the AI and it
+generates documentation based on it.</p>
+<p>You just need to install it and configure it, execute <code>mix lazy_doc</code> and boom
+you have brand new documentation from scratch.</p>
+<h3 id="purpose">Purpose</h3>
+<p>The purpose of <code>Lazy Doc</code> is much bigger it aims to be a docs checker as well.</p>
+<p>with <code>mix lazy_doc.check</code> you can check if all the documentation under
+<code>patterns</code> paths regex. This check can be easily implemented in the CI, so if
+you forget to document something CI will not pass.</p>
+<h3 id="documentation-criteria">Documentation criteria</h3>
+<p>Lazy Doc will only document functions which agree with the following criteria:</p>
+<ul>
+<li>Public functions not already documented. (already documented functions are
+ignored)</li>
+<li>Public functions without hidden documentation tag <code>@doc false</code>. (hidden docs
+function are ignored).</li>
+<li>Private functions are ignored (<em>but included in the prompt if they are
+auxiliary functions continue reading for more info</em>).</li>
+</ul>
+<p>so this way if <code>lazy_doc.check</code> does not pass because of a function, you take
+one of the following actions.</p>
+<ul>
+<li>Make the function private</li>
+<li>Make the doc hidden</li>
+<li>Document or just execute <code>mix lazy_doc</code>.</li>
+</ul>
+<p>The main reason LazyDoc can be really good for your project, it is because it
+will enforce you to write documentation. Even if you do not want it, it offers a
+good start template.</p>
+<h2 id="how-is-it-built">How is it built ?</h2>
+<p>Okay, you want to build a an automatic documentor, right ? So the first step is
+to detect what the hell you should document and what you should not and <strong>leave
+it as it is</strong>.</p>
+<p>What alternatives do you have to detect undocumented functions ?</p>
+<p>You always need to read the file at least once and then you have multiple
+approaches.</p>
+<h3 id="process-line-by-line-approach">Process line by line approach</h3>
+<p>This approach consist to check each line and look for search patterns, in our
+case <code>@doc whatever</code> on top of a function.</p>
+<p>There are a bunch of problems with this approach:</p>
+<ul>
+<li>how do you get the code of a single function and its clauses ? you can try to
+read lines until one end , but how do you know if it is an <code>end</code> of a <code>case</code>
+or an <code>end</code> of the <code>def</code>.</li>
+<li>how do you retain the format of the file ?</li>
+<li>how do you detect inner inner modules ?</li>
+<li>how do you detect if a function is inside an inner module or not ?</li>
+</ul>
+<p>As you can see this is a simple approach, but it has a bunch of problems and
+probably many more problems, which I had not thought, because I did not even try
+to implement it this way.</p>
+<p>So what is the alternative ?</p>
+<h3 id="asts-for-the-king-approach">ASTs for the king approach</h3>
+<p>Okay, so we are gonna try to detect functions through the AST of the module but
+first, let's explain what an AST is. An AST is a data structure which contains
+the syntax of the code, in fact it stands for <em>Abstract Syntax Tree</em>.</p>
+<p>In Elixir an AST has always the same pattern.</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="elixir"><span class="giallo-l"><span>{</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">defmodule</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> name</span><span>,</span><span> [</span><span style="color: light-dark(#D73A49, #F97583);">..</span><span>.</span><span>]</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> meta</span><span>,</span><span> [</span><span style="color: light-dark(#D73A49, #F97583);">..</span><span>.</span><span>]</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> children </span><span>}</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> node</span></span></code></pre>
+<p>So you get the AST of file, via <code>Code.string_to_quote()</code> function.</p>
+<p>For instance this module, it will have the corresponding AST</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="elixir"><span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">defmodule</span><span style="color: light-dark(#6F42C1, #B392F0);"> Example</span><span style="color: light-dark(#D73A49, #F97583);"> do</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">  @doc &quot;</span><span style="color: light-dark(#6A737D, #6A737D);">converts to string</span><span style="color: light-dark(#6A737D, #6A737D);">&quot;</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  def</span><span style="color: light-dark(#6F42C1, #B392F0);"> number</span><span>(</span><span>n</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> do</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">    Kernel</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">to_string</span><span>(</span><span>n</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  end</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">end</span></span></code></pre>
+<p><em>Note: you can experiment with <a href="https://pmarquez.net/lazy-doc/ast.ninja">ast.ninja site</a> if you want to
+experiment with ASTs</em></p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="elixir"><span class="giallo-l"><span>    {</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">defmodule</span><span>,</span><span> [</span><span style="color: light-dark(#005CC5, #79B8FF);">line</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> 1</span><span>]</span><span>,</span></span>
+<span class="giallo-l"><span>     [</span></span>
+<span class="giallo-l"><span>       {</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">__aliases__</span><span>,</span><span> [</span><span style="color: light-dark(#005CC5, #79B8FF);">line</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> 1</span><span>]</span><span>,</span><span> [</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">Example</span><span>]</span><span>}</span><span>,</span></span>
+<span class="giallo-l"><span>       [</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">         do</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span> {</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">__block__</span><span>,</span><span> [</span><span>]</span><span>,</span></span>
+<span class="giallo-l"><span>          [</span></span>
+<span class="giallo-l"><span>            {</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">@</span><span>,</span><span> [</span><span style="color: light-dark(#005CC5, #79B8FF);">line</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> 2</span><span>]</span><span>,</span></span>
+<span class="giallo-l"><span>             [</span></span>
+<span class="giallo-l"><span>               {</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">doc</span><span>,</span><span> [</span><span style="color: light-dark(#005CC5, #79B8FF);">line</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> 2</span><span>]</span><span>,</span></span>
+<span class="giallo-l"><span>                [</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">converts to string</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>]</span><span>}</span></span>
+<span class="giallo-l"><span>             ]</span><span>}</span><span>,</span></span>
+<span class="giallo-l"><span>            {</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">def</span><span>,</span><span> [</span><span style="color: light-dark(#005CC5, #79B8FF);">line</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> 3</span><span>]</span><span>,</span></span>
+<span class="giallo-l"><span>             [</span></span>
+<span class="giallo-l"><span>               {</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">number</span><span>,</span><span> [</span><span style="color: light-dark(#005CC5, #79B8FF);">line</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> 3</span><span>]</span><span>,</span></span>
+<span class="giallo-l"><span>                [</span><span>{</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">n</span><span>,</span><span> [</span><span style="color: light-dark(#005CC5, #79B8FF);">line</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> 3</span><span>]</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> nil</span><span>}</span><span>]</span><span>}</span><span>,</span></span>
+<span class="giallo-l"><span>               [</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">                 do</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span> {</span><span>{</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">.</span><span>,</span><span> [</span><span style="color: light-dark(#005CC5, #79B8FF);">line</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> 4</span><span>]</span><span>,</span></span>
+<span class="giallo-l"><span>                   [</span></span>
+<span class="giallo-l"><span>                     {</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">__aliases__</span><span>,</span></span>
+<span class="giallo-l"><span>                      [</span><span style="color: light-dark(#005CC5, #79B8FF);">line</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> 4</span><span>]</span><span>,</span><span> [</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">Kernel</span><span>]</span><span>}</span><span>,</span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">                     :</span><span style="color: light-dark(#005CC5, #79B8FF);">to_string</span></span>
+<span class="giallo-l"><span>                   ]</span><span>}</span><span>,</span><span> [</span><span style="color: light-dark(#005CC5, #79B8FF);">line</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> 4</span><span>]</span><span>,</span></span>
+<span class="giallo-l"><span>                  [</span><span>{</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">n</span><span>,</span><span> [</span><span style="color: light-dark(#005CC5, #79B8FF);">line</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);"> 4</span><span>]</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> nil</span><span>}</span><span>]</span><span>}</span></span>
+<span class="giallo-l"><span>               ]</span></span>
+<span class="giallo-l"><span>             ]</span><span>}</span></span>
+<span class="giallo-l"><span>          ]</span><span>}</span></span>
+<span class="giallo-l"><span>       ]</span></span>
+<span class="giallo-l"><span>     ]</span><span>}</span></span></code></pre>
+<p>You can just pattern match the node you want and get the code from that node.
+for example:</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="elixir"><span class="giallo-l"><span>{</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span style="color: light-dark(#005CC5, #79B8FF);">def</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> name</span><span>,</span><span> [</span><span style="color: light-dark(#D73A49, #F97583);">..</span><span>.</span><span>]</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> meta</span><span>,</span><span> [</span><span style="color: light-dark(#D73A49, #F97583);">..</span><span>.</span><span>]</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> children </span><span>}</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> ast_fun</span></span></code></pre>
+<p>In <code>ast_fun</code> we have the sub ast of that function we just need to convert it
+back to code and send it to analyze with AI, but just if it is not documented.</p>
+<p>And you know that <code>number</code> function is in the <code>Example</code> module because it was in
+their children nodes list.</p>
+<h4 id="how-do-you-convert-ast-to-string-again">How do you convert AST to String again ?</h4>
+<p>You can just use <code>Macro.to_string(ast_fun)</code>. (There is some caviar on this,
+continue reading).</p>
+<h4 id="how-do-we-know-if-a-function-is-already-documented-or-not">How do we know if a function is already documented or not ?</h4>
+<p>Easy, you just need to call <code>Code.fetch_docs(module)</code> which requires to give the
+name of the module.</p>
+<p>Not so fast, what happens if you have the same name of function with different
+number of arguments (different arities not clauses). This function will return
+you documentation for each different function in the language, but are 2
+functions with the same name different from each other, just because their arity
+differs? The answer is <strong>YES</strong>, but does this make sense in the POV of
+documentation. Think for a moment of what coding situation would you use the
+same name with different arities.</p>
+<p>Let's take a look this example:</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="elixir"><span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">##</span><span style="color: light-dark(#6A737D, #6A737D);"> Look this function, does make sense if you hide the other functions ?</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">def</span><span style="color: light-dark(#6F42C1, #B392F0);"> fibs</span><span>(</span><span>n</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> do</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">  fibs</span><span>(</span><span>n</span><span>,</span><span> [</span><span style="color: light-dark(#005CC5, #79B8FF);">1</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> 0</span><span>]</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">end</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">def</span><span style="color: light-dark(#6F42C1, #B392F0);"> fibs</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">1</span><span>,</span><span> [</span><span>a</span><span>,</span><span> b </span><span style="color: light-dark(#D73A49, #F97583);">|</span><span> rest</span><span>]</span><span>)</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> do:</span><span> [</span><span>a </span><span style="color: light-dark(#D73A49, #F97583);">+</span><span> b</span><span>,</span><span> a</span><span>,</span><span> b </span><span style="color: light-dark(#D73A49, #F97583);">|</span><span> rest</span><span>]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">def</span><span style="color: light-dark(#6F42C1, #B392F0);"> fibs</span><span>(</span><span>n</span><span>,</span><span> [</span><span>a</span><span>,</span><span> b </span><span style="color: light-dark(#D73A49, #F97583);">|</span><span> rest</span><span>]</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> do</span></span>
+<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">  fibs</span><span>(</span><span>n </span><span style="color: light-dark(#D73A49, #F97583);">-</span><span style="color: light-dark(#005CC5, #79B8FF);"> 1</span><span>,</span><span> [</span><span>a </span><span style="color: light-dark(#D73A49, #F97583);">+</span><span> b</span><span>,</span><span> a</span><span>,</span><span> b </span><span style="color: light-dark(#D73A49, #F97583);">|</span><span> rest</span><span>]</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">end</span></span></code></pre>
+<p>Probably just because one of the functions is auxiliary of the other. So the
+auxiliary function does not make sense by itself and the entry point function
+does not make sense without the auxiliary. We need a way to group up the
+functions by name even if they have different arity and clauses (function same
+name and same arity) to send it to AI in a single prompt.</p>
+<h3 id="fetch-the-prompt">Fetch the prompt</h3>
+<p>Okay, you need a way to get the documentation using AI</p>
+<p>So what you should do is to call an AI API, but which one ?</p>
+<p>There is a bunch of AI APIs and everyone has its favorite AI. Not talking about
+if you want to use an internal model of the company, it could be really hard. So
+why not give freedom to call your own AI ?</p>
+<p>You just need to implement the <code>LazyDoc.Provider</code> behavior. This is the contract
+that will use <code>LazyDoc</code> to request the docs to API and extract them from the
+response.</p>
+<h3 id="make-a-good-prompt-ai-is-like-a-kid-explain-what-you-want">Make a good prompt (AI is like a kid explain what you want).</h3>
+<p>Making a good prompt is really important for fetching the docs, you should
+specify your prompt always with at least one example and be precise with the
+format you want.</p>
+<p>Example:</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="elixir"><span class="giallo-l"><span style="color: light-dark(#032F62, #9ECBFF);">~s(</span><span style="color: light-dark(#032F62, #9ECBFF);">You should describe the parameters based on the spec given and give a small description of the</span></span>
+<span class="giallo-l"><span style="color: light-dark(#032F62, #9ECBFF);"> following function.</span><span style="color: light-dark(#005CC5, #79B8FF);">\n</span><span style="color: light-dark(#005CC5, #79B8FF);">\n</span><span style="color: light-dark(#032F62, #9ECBFF);">Please do it in the following format given as an example, important do not</span></span>
+<span class="giallo-l"><span style="color: light-dark(#032F62, #9ECBFF);"> return the header of the function, do not return a explanation of the function, your output must</span></span>
+<span class="giallo-l"><span style="color: light-dark(#032F62, #9ECBFF);">be only the docs in the following format:</span><span style="color: light-dark(#005CC5, #79B8FF);">\n</span><span style="color: light-dark(#005CC5, #79B8FF);">\n</span><span style="color: light-dark(#032F62, #9ECBFF);">Returns the Transaction corresponding to</span></span>
+<span class="giallo-l"><span style="color: light-dark(#032F62, #9ECBFF);">transaction_id</span><span style="color: light-dark(#005CC5, #79B8FF);">\(</span><span style="color: light-dark(#032F62, #9ECBFF);">Initial sentence indicating what returns the function</span><span style="color: light-dark(#005CC5, #79B8FF);">\)</span><span style="color: light-dark(#005CC5, #79B8FF);">\n</span><span style="color: light-dark(#005CC5, #79B8FF);">\n</span><span style="color: light-dark(#032F62, #9ECBFF);">## Parameters</span><span style="color: light-dark(#005CC5, #79B8FF);">\n</span><span style="color: light-dark(#005CC5, #79B8FF);">\n</span><span style="color: light-dark(#032F62, #9ECBFF);">-</span></span>
+<span class="giallo-l"><span style="color: light-dark(#032F62, #9ECBFF);">transaction_id - foreign key of the Transactions table.</span><span style="color: light-dark(#005CC5, #79B8FF);">\n</span><span style="color: light-dark(#032F62, #9ECBFF);">## Description</span><span style="color: light-dark(#005CC5, #79B8FF);">\n</span><span style="color: light-dark(#032F62, #9ECBFF);"> Performs a search in the</span></span>
+<span class="giallo-l"><span style="color: light-dark(#032F62, #9ECBFF);">database</span><span style="color: light-dark(#005CC5, #79B8FF);">\n</span><span style="color: light-dark(#005CC5, #79B8FF);">\n</span><span style="color: light-dark(#032F62, #9ECBFF);">Function to document:</span><span style="color: light-dark(#005CC5, #79B8FF);">\n</span><span style="color: light-dark(#032F62, #9ECBFF);">)</span></span></code></pre>
+<p>This is the default prompt the library will use, to this prompt you should
+concatenate the function code. Of course there is a bunch of attempts to get the
+right prompt and you need to even consider to be compliant with existing doc
+tools.</p>
+<h3 id="insert-the-docs-on-the-ast">Insert the docs on the AST</h3>
+<p>To insert the doc in the AST you just need to create a <code>@doc</code> node and insert it
+just before <code>def</code> node.</p>
+<p>but what if this <code>def</code> node is in an inner module children. You need to find
+first the children of the corresponding module. <em>JUST pattern match</em>, it will
+work (complex pattern match but I promise, it will work). Once you have the
+children, need to locate the <code>def</code> node position in the children and then insert
+it just one position before.</p>
+<h3 id="the-end-of-the-trip">The end of the trip ?</h3>
+<p>And then transform the AST to String with <code>Macro.to_string()</code> and write it to
+the corresponding file, right ?</p>
+<p><strong>WRONG</strong>, you just messed up all the format of the original file.</p>
+<p>What? Where are my comments? it just deleted my comments during the entire
+process.</p>
+<p>How do you fix it ?</p>
+<h3 id="the-master-talk-about-ast-manipulation">The master talk about AST manipulation.</h3>
+<p>At this point, you are almost there, almost done, but you are kind of stuck
+because you want to preserve the code as it was. Remember this ?</p>
+<blockquote>
+<p><strong>leave the code as it is</strong></p>
+</blockquote>
+<p>It is one of the premises that we have at least to use it in production.</p>
+<p>Surprise surprise, you have seen it before, it is the <code>AST NINJA</code> talk. Actually
+the name of the talk is <code>The Elixir parser under microscope</code> by <code>Arjan Scherpenisse</code>.</p>
+<p>This talk is about how to preserve the code as it is after an AST manipulation.
+Basically what you need to do is what the Elixir Formatter does, Add tokenizer
+metadata to AST, store the comments outside the AST and merge it after all the
+AST manipulation.</p>
+<p>Fortunately this talk was done years ago and the Elixir std library changed
+according the talk recommendations, so we just need to use
+<code>Code.string_to_quote_with_comments</code> with some options and then after the AST
+manipulation use</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="elixir"><span class="giallo-l"><span>ast</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">|&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> quote_to_algebra</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">comments</span><span style="color: light-dark(#005CC5, #79B8FF);">:</span><span> comments</span><span>,</span><span style="color: light-dark(#D73A49, #F97583);"> ..</span><span>.</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">|&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> Inspect</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">Algebra</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">format</span><span>(</span><span>max_line_width_configured</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">|&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> IO</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">iodata_to_binary</span><span>(</span><span>)</span></span></code></pre>
+<p>This will preserve the format of the file.</p>
+<h2 id="feature-requests">Feature requests</h2>
+<p>After telling you how you can build LazyDoc, I can tell you what features
+request were requested.</p>
+<ul>
+<li>They requested a way to not have bloated documentation files, the issue users
+found was that generating so much docs will cause the file incresize the size
+dramatically. So in order to address it, I added the <code>external_doc</code> option
+which allows you to write the doc in a separate markdown file and read the doc
+of that function at compile time.</li>
+</ul>
+<p>Example:</p>
+<p><code>priv/lazy_doc/lazy_doc/docs_per_module.md</code></p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="markdown"><span class="giallo-l"><span>Returns a list of documentation for each function in the specified modules.</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);font-weight: bold;">##</span><span style="color: light-dark(#005CC5, #79B8FF);font-weight: bold;"> Parameters</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#E36209, #FFAB70);">-</span><span> modules - a list of module names to extract documentation from.</span></span>
+<span class="giallo-l"><span>  </span></span>
+<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);font-weight: bold;">##</span><span style="color: light-dark(#005CC5, #79B8FF);font-weight: bold;"> Description</span></span>
+<span class="giallo-l"><span> Retrieves the documentation for functions in the given modules using Elixir&#39;s introspection capabilities.</span></span></code></pre>
+<p><code>lib/lazy_doc.ex</code></p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="elixir"><span class="giallo-l"><span>  @</span><span>doc</span><span style="color: light-dark(#6F42C1, #B392F0);"> File</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">read!</span><span>(</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">priv/lazy_doc/lazy_doc/docs_per_module.md</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>)</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  def</span><span style="color: light-dark(#6F42C1, #B392F0);"> docs_per_module</span><span>(</span><span>modules</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> do</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    ..</span><span>.</span></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  end</span><span> </span></span></code></pre>
+<p>this way, you can enjoy a rich documentation without having big blocks of
+documentation before each function. Even the LSP will give you the documentation
+if you hover over the function, because the documentation is embedded in the
+<code>.beam</code> file.</p>
+<ul>
+<li>
+<p>In the article, we focus on the functions because they were more interesting
+to analyze how they were done, but the library can also generate <code>@moduledoc</code>
+based on the code of the module, but usually a module needs a context in the
+application in order to write their <code>@moduledoc</code> so the feature request is to
+make a dependency module graph and include the dependency <code>@moduledoc</code> or the
+code of dependency module in the prompt. (TO BE DONE).</p>
+</li>
+<li>
+<p>Another interesting feature is to clean all the docs, so this way you can
+regenerate them from scratch, so we have created a third task <code>mix lazy_doc.clean</code> which deletes all the <code>@doc</code> annotations, but it keeps <code>@doc false</code> annotations. This is useful when your product has evolved, but your docs
+have not evolved with your product.</p>
+</li>
+<li>
+<p>Make a default prompt to generate docs compliant with <code>ex_docs</code>, this way when
+we generate the docs webpage, you can experience the documentation as it was a
+usual docs.</p>
+</li>
+</ul>
+<h2 id="conclusion">Conclusion</h2>
+<p>Making new projects make you learn a lot of stuff. Usually to share your
+projects, you need to write how to use them properly, that is the reason
+developers write docs. I do not know a bunch of people who likes writing docs or
+they have time to write them. Writing docs maybe does not add too much business
+value to the product you are building but it will add a huge value to developers
+building the product or the developers using your product and they are gonna be
+less prone to making mistakes.</p>
+<p>Writing LazyDoc, it allows me to learn about deep aspects of the Elixir core,
+Elixir AST and learn what weird stuff you can do. For example</p>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="elixir"><span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">defmodule</span><span style="color: light-dark(#6F42C1, #B392F0);"> Hello</span><span style="color: light-dark(#D73A49, #F97583);"> do</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  defmodule</span><span style="color: light-dark(#6F42C1, #B392F0);"> Hello</span><span style="color: light-dark(#D73A49, #F97583);"> do</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  end</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">end</span></span></code></pre>
+<p>This is valid Elixir code, but it is not allowed in LazyDoc.</p>
+<p>Writing LazyDoc, I realize that good software sometimes needs to be opinionated,
+take a strong opinion and follow it until the end, for example <code>external_doc</code>
+feature is really opinionated because some people will like to have the docs in
+the code and some other will just like to see the code and not being distracted
+but anything else. Another strong opinion that this library takes is what does
+with the functions of the same name, basically we understand that they are the
+same function to document even that for Elixir it is not. At least every
+teammates I asked told me that 2 functions named the same are always related, so
+it makes sense to document them together. Same nested named modules does not
+make sense in almost any situation, so LazyDoc does not allow it because they
+have the same AST structure.</p>
+<p>Thank you very much for your reading effort.</p>
+<p>You can support <a rel="external" href="https://github.com/pxp9/lazy_doc">lazy_doc repo</a> and if you
+are curious how LazyDoc docs look, LazyDoc is documented by LazyDoc itself you
+can check it in <a rel="external" href="https://hexdocs.pm/lazy_doc/api-reference.html">lazy_doc
+hexdocs</a></p>
+</section>
+
+  <hr />
+
+  <!-- Post Taxonomies -->
+  
+<footer class="mt-12 flex flex-col">
+  <!---->
+  <!---->
+  <!---->
+  <!---->
+  
+  <div class="mb-2 flex flex-wrap">
+    <span class="block-bg mb-1.5 mr-1.5 rounded-lg px-5 py-1.5">Tags </span>
+    
+    <a
+      class="block-bg block-hover mb-1.5 mr-1.5 rounded-lg px-5 py-1.5 no-underline"
+      href="https://pmarquez.net/tags/elixir/"
+      >elixir</a
+    >
+    
+  </div>
+  
+</footer>
+
+<!---->
+
+  <!-- Post Nav -->
+  
+<nav class="block-bg mt-12 flex flex-wrap rounded-lg text-lg">
+  
+  <a
+    class="block-hover-mask flex min-w-[50%] grow items-center rounded-l-md p-6 pr-3 font-semibold no-underline"
+    href="https:&#x2F;&#x2F;pmarquez.net&#x2F;async-processing&#x2F;"
+    ><span class="mr-1.5">←</span><span>Fang, async background processing for Rust.</span></a
+  >
+  <!---->
+  
+  <a
+    class="block-hover-mask ml-auto flex min-w-[50%] grow items-center justify-end rounded-r-md p-6 pl-3 font-semibold no-underline"
+    href="https:&#x2F;&#x2F;pmarquez.net&#x2F;fibonacci-calculation&#x2F;"
+    ><span>Fibonacci calculation at peak performance</span><span class="ml-1.5">→</span></a
+  >
+  
+</nav>
+
+<!---->
+
+  <!-- Comment -->
+  
+
+  <!-- Page End inject -->
+  
+</article>
+
+    </main>
+
+    <footer class="mx-auto flex max-w-3xl flex-wrap items-center px-8 py-4 text-sm opacity-60">
+  <div class="mr-auto basis-full lg:basis-1/2">
+    <!---->
+    <!---->
+    &copy; 2026<!---->
+    
+    <a class="link" href="https://pmarquez.net">
+      pxp9
+    </a>
+    
+  </div>
+  <div class="flex basis-full lg:basis-1/2 lg:justify-end">
+    <a class="link mr-6 lg:ml-6" href="https://www.getzola.org/" rel="noopener" target="_blank">
+      Powered by Zola
+    </a>
+  </div>
+  <!-- Footer inject -->
+  
+</footer>
+
+
+    <!-- Body End inject -->
+    
+  </body>
+</html>
